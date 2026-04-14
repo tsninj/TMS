@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Q&amp;A - Thank You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120; /* Dark Navy Background */
+            color: #ffffff;
+        }
+
+        .slide-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding: 40px 60px;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        /* Background Abstract Shapes (No Gradients) */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .shape-1 {
+            width: 600px;
+            height: 600px;
+            background-color: #3B82F6; /* Blue */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background-color: #10B981; /* Emerald */
+            top: -100px;
+            right: -100px;
+        }
+
+        .shape-3 {
+            width: 300px;
+            height: 300px;
+            background-color: #8B5CF6; /* Purple */
+            bottom: -50px;
+            left: -50px;
+        }
+
+        /* Main Content Wrapper */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        /* Q&A Circle */
+        .qa-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: rgba(30, 41, 59, 0.5);
+            border: 2px solid #3B82F6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .qa-icon {
+            font-size: 3.5rem;
+            color: #60A5FA;
+        }
+
+        /* Typography */
+        .thank-you-mn {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .thank-you-en {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #94A3B8;
+            margin-bottom: 50px;
+            text-align: center;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Contact Box */
+        .contact-container {
+            display: flex;
+            gap: 60px;
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 50px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #64748B;
+            font-weight: 600;
+        }
+
+        .contact-value {
+            font-size: 1.1rem;
+            color: #E2E8F0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-icon {
+            color: #3B82F6;
+            font-size: 1rem;
+        }
+
+        /* Divider */
+        .divider {
+            width: 1px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Bottom Branding */
+        .university-brand {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.6;
+        }
+
+        .uni-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: #CBD5E1;
+        }
+
+        .dept-name {
+            font-size: 0.75rem;
+            color: #64748B;
+        }
+
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <!-- Abstract Backgrounds -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <!-- Icon -->
+        <div class="qa-circle">
+            <i class="fas fa-question qa-icon"></i>
+        </div>
+        <!-- Main Text -->
+        <div class="text-center">
+            <h1 class="thank-you-mn">Анхаарал хандуулсанд баярлалаа</h1>
+            <p class="thank-you-en">Thank you for your attention</p>
+        </div>
+        <!-- Contact Information -->
+        <div class="contact-container">
+            <!-- Author -->
+            <div class="contact-item">
+                <span class="contact-label">Author / Илтгэгч</span>
+                <p class="contact-value">
+                    <i class="fas fa-user-graduate contact-icon"></i>
+                    Ц. Нинжбадгар (Ts. Ninjbadgar)
+                </p>
+            </div>
+            <div class="divider"></div>
+            <!-- Email -->
+            <div class="contact-item">
+                <span class="contact-label">Email / И-мэйл</span>
+                <p class="contact-value">
+                    <i class="fas fa-envelope contact-icon"></i>
+                    ninjbadgar@num.edu.mn
+                </p>
+            </div>
+            <div class="divider"></div>
+            <!-- Student ID -->
+            <div class="contact-item">
+                <span class="contact-label">Student ID</span>
+                <p class="contact-value">
+                    <i class="fas fa-id-card contact-icon"></i>
+                    22B1NUM1811
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- Footer / Branding -->
+    <div class="university-brand">
+        <p class="uni-name">NATIONAL UNIVERSITY OF MONGOLIA</p>
+        <p class="dept-name">School of Information Technology and Electronics</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Chapter 6: Conclusion &amp; Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120;
+            color: #ffffff;
+        }
+        .slide-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #0B1120;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Background Elements */
+        .bg-shape {
+            position: absolute;
+            opacity: 0.05;
+            z-index: 0;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .shape-1 {
+            top: -100px;
+            right: -50px;
+            width: 450px;
+            height: 450px;
+            background-color: #10B981; /* Emerald Green for Success */
+            filter: blur(80px);
+        }
+        .shape-2 {
+            bottom: -50px;
+            left: -50px;
+            width: 350px;
+            height: 350px;
+            background-color: #3B82F6; /* Blue */
+            filter: blur(80px);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+            z-index: 10;
+        }
+        .chapter-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #60A5FA;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .title-mn {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            line-height: 1.2;
+        }
+        .title-en {
+            font-size: 1.15rem;
+            color: #94A3B8;
+            font-weight: 400;
+            margin-left: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid #334155;
+        }
+
+        /* Main Content Layout */
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            gap: 50px;
+            z-index: 10;
+            align-items: center;
+        }
+
+        /* Left Side: Summary Visual */
+        .summary-visual {
+            flex: 0 0 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            height: 450px;
+            position: relative;
+        }
+
+        .success-icon-container {
+            width: 140px;
+            height: 140px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #10B981;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+        }
+        .success-icon {
+            font-size: 4rem;
+            color: #10B981;
+        }
+
+        .summary-text {
+            text-align: center;
+        }
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 10px;
+        }
+        .summary-desc {
+            font-size: 0.9rem;
+            color: #94A3B8;
+            line-height: 1.5;
+        }
+
+        /* Right Side: Checklist */
+        .checklist-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .achievement-card {
+            background-color: #1E293B;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .achievement-card:hover {
+            transform: translateX(5px);
+            background-color: #253346;
+            border-color: #3B82F6;
+        }
+
+        .check-circle {
+            flex: 0 0 40px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(16, 185, 129, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: #10B981;
+            font-size: 1.1rem;
+        }
+
+        .card-content {
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #F1F5F9;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        .stat-badge {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #60A5FA;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            white-space: nowrap;
+            margin-left: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <!-- Backgrounds -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <p class="chapter-label">Chapter 06</p>
+            <div style="display: flex; align-items: baseline;">
+                <h1 class="title-mn">Дүгнэлт ба Үр дүн</h1>
+                <span class="title-en">Conclusion &amp; Results</span>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-gray-400">Project Achievements</p>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <!-- Left Summary Visual -->
+        <div class="summary-visual">
+            <div class="success-icon-container">
+                <i class="fas fa-check success-icon"></i>
+            </div>
+            <div class="summary-text">
+                <p class="summary-title">System Deployed</p>
+                <p class="summary-desc">
+                    The Thesis Management System (TMS) module has been successfully implemented and tested, meeting all core requirements for the National University of Mongolia.
+                </p>
+            </div>
+        </div>
+        <!-- Right Checklist -->
+        <div class="checklist-container">
+            <!-- Item 1 -->
+            <div class="achievement-card">
+                <div class="check-circle">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="card-content">
+                    <p class="card-title">Дипломын ажлын хяналтыг автоматжуулсан</p>
+                    <p class="card-subtitle">Successfully automated the thesis tracking and evaluation module</p>
+                </div>
+                <div class="stat-badge">100% Digital</div>
+            </div>
+            <!-- Item 2 -->
+            <div class="achievement-card">
+                <div class="check-circle">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="card-content">
+                    <p class="card-title">Үйл ажиллагааны ил тод байдлыг сайжруулсан</p>
+                    <p class="card-subtitle">Improved transparency for students, teachers, and department staff</p>
+                </div>
+                <div class="stat-badge">Real-time</div>
+            </div>
+            <!-- Item 3 -->
+            <div class="achievement-card">
+                <div class="check-circle">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <div class="card-content">
+                    <p class="card-title">Гар ажиллагааг эрс багасгасан</p>
+                    <p class="card-subtitle">Reduced manual administrative workload for department staff</p>
+                </div>
+                <div class="stat-badge">Efficiency ↑</div>
+            </div>
+            <!-- Item 4 -->
+            <div class="achievement-card">
+                <div class="check-circle">
+                    <i class="fas fa-server"></i>
+                </div>
+                <div class="card-content">
+                    <p class="card-title">Өндөр ачаалал даах чадвар (Scalability)</p>
+                    <p class="card-subtitle">Reactive/EDA approach handles hundreds of concurrent submissions</p>
+                </div>
+                <div class="stat-badge">Non-blocking</div>
+            </div>
+            <!-- Item 5 -->
+            <div class="achievement-card">
+                <div class="check-circle">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <div class="card-content">
+                    <p class="card-title">Өгөгдлийн нийцлийг хангасан</p>
+                    <p class="card-subtitle">Eventual consistency ensured across microservices via Kafka</p>
+                </div>
+                <div class="stat-badge">Reliable</div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <p>National University of Mongolia • School of ITE</p>
+        <p>Page 15</p>
+    </div>
+</div>
+</body>
+</html>

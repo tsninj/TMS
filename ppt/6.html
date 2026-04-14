@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Chapter 2: Technology Stack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120; /* Dark Navy */
+            color: #ffffff;
+        }
+        .slide-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #0B1120;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Background Ambience */
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.05;
+            z-index: 0;
+        }
+        .glow-1 { top: -200px; left: -100px; background-color: #3B82F6; }
+        .glow-2 { bottom: -200px; right: -100px; background-color: #10B981; }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            z-index: 10;
+        }
+        .chapter-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #60A5FA;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .title-mn {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            line-height: 1.2;
+        }
+        .title-en {
+            font-size: 1.15rem;
+            color: #94A3B8;
+            font-weight: 400;
+            margin-left: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid #334155;
+        }
+
+        /* Grid Layout */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: 1fr 1fr;
+            gap: 24px;
+            flex: 1;
+            z-index: 10;
+            padding-bottom: 10px;
+        }
+
+        /* Tech Card Styles */
+        .tech-card {
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .tech-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(30, 41, 59, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+        .card-titles {
+            flex: 1;
+        }
+        .card-title-main {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #F1F5F9;
+            margin-bottom: 2px;
+        }
+        .card-title-sub {
+            font-size: 0.8rem;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Technologies List */
+        .tech-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        .tech-item {
+            display: flex;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.4);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+        }
+        .tech-item-icon {
+            font-size: 0.9rem;
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        .tech-name {
+            font-size: 0.95rem;
+            color: #E2E8F0;
+            font-weight: 500;
+        }
+        .tech-tag {
+            margin-left: auto;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: #94A3B8;
+        }
+
+        /* Specific Card Colors */
+        /* Backend: Green */
+        .card-backend .icon-box { background: rgba(132, 204, 22, 0.15); color: #A3E635; }
+        .card-backend .tech-item-icon { color: #A3E635; }
+        .card-backend:hover { border-color: rgba(132, 204, 22, 0.3); }
+
+        /* Frontend: Cyan/Blue */
+        .card-frontend .icon-box { background: rgba(56, 189, 248, 0.15); color: #38BDF8; }
+        .card-frontend .tech-item-icon { color: #38BDF8; }
+        .card-frontend:hover { border-color: rgba(56, 189, 248, 0.3); }
+
+        /* Broker: Orange */
+        .card-broker .icon-box { background: rgba(249, 115, 22, 0.15); color: #FB923C; }
+        .card-broker .tech-item-icon { color: #FB923C; }
+        .card-broker:hover { border-color: rgba(249, 115, 22, 0.3); }
+
+        /* Database: Indigo */
+        .card-db .icon-box { background: rgba(99, 102, 241, 0.15); color: #818CF8; }
+        .card-db .tech-item-icon { color: #818CF8; }
+        .card-db:hover { border-color: rgba(99, 102, 241, 0.3); }
+
+        /* Architecture: Purple */
+        .card-arch .icon-box { background: rgba(168, 85, 247, 0.15); color: #C084FC; }
+        .card-arch .tech-item-icon { color: #C084FC; }
+        .card-arch:hover { border-color: rgba(168, 85, 247, 0.3); }
+
+        /* Special Layout for Architecture to span 2 cols */
+        .card-arch {
+            grid-column: span 2;
+            flex-direction: row;
+            align-items: center;
+        }
+        .card-arch .card-header {
+            border-bottom: none;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 0;
+            padding-bottom: 0;
+            margin-right: 24px;
+            padding-right: 24px;
+            width: 250px;
+            height: 100%;
+        }
+        .card-arch .tech-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <!-- Background Glows -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <p class="chapter-label">Chapter 02</p>
+            <div style="display: flex; align-items: baseline;">
+                <h1 class="title-mn">Технологийн стек</h1>
+                <span class="title-en">Technology Stack</span>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-gray-400">Implementation Details</p>
+        </div>
+    </div>
+    <!-- Grid Content -->
+    <div class="tech-grid">
+        <!-- 1. Backend -->
+        <div class="tech-card card-backend">
+            <div class="card-header">
+                <div class="icon-box"><i class="fas fa-server"></i></div>
+                <div class="card-titles">
+                    <p class="card-title-main">Backend Service</p>
+                    <p class="card-title-sub">Reactive Java</p>
+                </div>
+            </div>
+            <div class="tech-list">
+                <div class="tech-item">
+                    <i class="fas fa-leaf tech-item-icon"></i>
+                    <span class="tech-name">Spring Boot 3.2</span>
+                    <span class="tech-tag">Framework</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-sync-alt tech-item-icon"></i>
+                    <span class="tech-name">Spring WebFlux</span>
+                    <span class="tech-tag">Reactive Web</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-atom tech-item-icon"></i>
+                    <span class="tech-name">Project Reactor</span>
+                    <span class="tech-tag">Mono / Flux</span>
+                </div>
+            </div>
+        </div>
+        <!-- 2. Message Broker -->
+        <div class="tech-card card-broker">
+            <div class="card-header">
+                <div class="icon-box"><i class="fas fa-envelope-open-text"></i></div>
+                <div class="card-titles">
+                    <p class="card-title-main">Message Broker</p>
+                    <p class="card-title-sub">Event Streaming</p>
+                </div>
+            </div>
+            <div class="tech-list">
+                <div class="tech-item">
+                    <i class="fas fa-stream tech-item-icon"></i>
+                    <span class="tech-name">Apache Kafka</span>
+                    <span class="tech-tag">Core</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-project-diagram tech-item-icon"></i>
+                    <span class="tech-name">Kafka Binder</span>
+                    <span class="tech-tag">Spring Cloud</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-layer-group tech-item-icon"></i>
+                    <span class="tech-name">Topics &amp; Partitions</span>
+                    <span class="tech-tag">Architecture</span>
+                </div>
+            </div>
+        </div>
+        <!-- 3. Frontend -->
+        <div class="tech-card card-frontend">
+            <div class="card-header">
+                <div class="icon-box"><i class="fas fa-laptop-code"></i></div>
+                <div class="card-titles">
+                    <p class="card-title-main">Frontend Client</p>
+                    <p class="card-title-sub">User Interface</p>
+                </div>
+            </div>
+            <div class="tech-list">
+                <div class="tech-item">
+                    <i class="fab fa-react tech-item-icon"></i>
+                    <span class="tech-name">Next.js 14</span>
+                    <span class="tech-tag">React FW</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-paint-brush tech-item-icon"></i>
+                    <span class="tech-name">Tailwind CSS</span>
+                    <span class="tech-tag">Styling</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-chart-pie tech-item-icon"></i>
+                    <span class="tech-name">Chart.js</span>
+                    <span class="tech-tag">Visuals</span>
+                </div>
+            </div>
+        </div>
+        <!-- 4. Database -->
+        <div class="tech-card card-db">
+            <div class="card-header">
+                <div class="icon-box"><i class="fas fa-database"></i></div>
+                <div class="card-titles">
+                    <p class="card-title-main">Database</p>
+                    <p class="card-title-sub">Persistence</p>
+                </div>
+            </div>
+            <div class="tech-list">
+                <div class="tech-item">
+                    <i class="fas fa-elephant tech-item-icon"></i>
+                    <span class="tech-name">PostgreSQL 16</span>
+                    <span class="tech-tag">RDBMS</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-bolt tech-item-icon"></i>
+                    <span class="tech-name">R2DBC Driver</span>
+                    <span class="tech-tag">Non-blocking</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-table tech-item-icon"></i>
+                    <span class="tech-name">Flyway</span>
+                    <span class="tech-tag">Migration</span>
+                </div>
+            </div>
+        </div>
+        <!-- 5. Architecture (Spans 2 columns) -->
+        <div class="tech-card card-arch">
+            <div class="card-header">
+                <div class="icon-box"><i class="fas fa-sitemap"></i></div>
+                <div class="card-titles">
+                    <p class="card-title-main">System Architecture</p>
+                    <p class="card-title-sub">Design Pattern</p>
+                </div>
+            </div>
+            <div class="tech-list">
+                <div class="tech-item">
+                    <i class="fas fa-cubes tech-item-icon"></i>
+                    <span class="tech-name">Microservices</span>
+                    <span class="tech-tag">Modular</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-network-wired tech-item-icon"></i>
+                    <span class="tech-name">Event-Driven (EDA)</span>
+                    <span class="tech-tag">Async</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-docker tech-item-icon"></i>
+                    <span class="tech-name">Docker</span>
+                    <span class="tech-tag">Container</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-door-open tech-item-icon"></i>
+                    <span class="tech-name">API Gateway</span>
+                    <span class="tech-tag">Routing</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <p>National University of Mongolia • School of ITE</p>
+        <p>Page 06</p>
+    </div>
+</div>
+</body>
+</html>

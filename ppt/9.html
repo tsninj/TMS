@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Chapter 4: Microservices Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120;
+            color: #ffffff;
+        }
+        .slide-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #0B1120;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Background Elements */
+        .bg-shape {
+            position: absolute;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .shape-1 {
+            top: -100px;
+            left: -100px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background-color: #3B82F6;
+            filter: blur(80px);
+        }
+        .shape-2 {
+            bottom: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background-color: #8B5CF6;
+            filter: blur(80px);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+            z-index: 10;
+        }
+        .chapter-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #60A5FA;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .title-mn {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            line-height: 1.2;
+        }
+        .title-en {
+            font-size: 1.15rem;
+            color: #94A3B8;
+            font-weight: 400;
+            margin-left: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid #334155;
+        }
+
+        /* Matrix Grid */
+        .matrix-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 16px;
+            flex: 1;
+            z-index: 10;
+            margin-top: 10px;
+        }
+
+        /* Card Styling */
+        .service-card {
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card:hover {
+            transform: translateY(-2px);
+            background-color: rgba(30, 41, 59, 0.6);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Top Borders for Categories */
+        .border-top-core { border-top: 4px solid #8B5CF6; } /* Purple */
+        .border-top-process { border-top: 4px solid #10B981; } /* Emerald */
+        .border-top-support { border-top: 4px solid #3B82F6; } /* Blue */
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-right: 10px;
+            background: rgba(255,255,255,0.05);
+        }
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #F1F5F9;
+        }
+
+        .card-body {
+            flex: 1;
+        }
+        .resp-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .resp-item {
+            font-size: 0.75rem;
+            color: #CBD5E1;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            line-height: 1.3;
+        }
+        .resp-bullet {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #64748B;
+            margin-right: 8px;
+        }
+        .core-bullet { background-color: #A78BFA; }
+        .process-bullet { background-color: #34D399; }
+        .support-bullet { background-color: #60A5FA; }
+
+        /* Icon Colors */
+        .icon-core { color: #A78BFA; }
+        .icon-process { color: #34D399; }
+        .icon-support { color: #60A5FA; }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+
+        /* Category Legend */
+        .legend-box {
+            position: absolute;
+            top: 25px;
+            right: 0px;
+            display: flex;
+            gap: 15px;
+            z-index: 20;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #94A3B8;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .legend-color {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <!-- Backgrounds -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <p class="chapter-label">Chapter 04</p>
+            <div style="display: flex; align-items: baseline;">
+                <h1 class="title-mn">Микросервис бүтэц</h1>
+                <span class="title-en">Microservices Design Matrix</span>
+            </div>
+        </div>
+        <!-- Legend embedded via absolute positioning in CSS, or here -->
+        <div class="legend-box">
+            <div class="legend-item"><div class="legend-color" style="background-color: #8B5CF6;"></div>Core Entity</div>
+            <div class="legend-item"><div class="legend-color" style="background-color: #10B981;"></div>Process Logic</div>
+            <div class="legend-item"><div class="legend-color" style="background-color: #3B82F6;"></div>Support Data</div>
+        </div>
+    </div>
+    <!-- Grid Layout -->
+    <div class="matrix-container">
+        <!-- ROW 1: CORE ENTITIES & MAIN WORKFLOW -->
+        <!-- 1. User Service -->
+        <div class="service-card border-top-core">
+            <div class="card-header">
+                <div class="card-icon icon-core"><i class="fas fa-user-shield"></i></div>
+                <div class="card-title">User Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>User Authentication (JWT)</p></li>
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>Profile Management</p></li>
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>Role-Based Access (RBAC)</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 2. Thesis Service -->
+        <div class="service-card border-top-core">
+            <div class="card-header">
+                <div class="card-icon icon-core"><i class="fas fa-book"></i></div>
+                <div class="card-title">Thesis Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>Topic Proposal &amp; Approval</p></li>
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>Thesis Metadata CRUD</p></li>
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>Final Archiving</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 3. Workflow Service -->
+        <div class="service-card border-top-process">
+            <div class="card-header">
+                <div class="card-icon icon-process"><i class="fas fa-project-diagram"></i></div>
+                <div class="card-title">Workflow Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>State Machine Management</p></li>
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>Deadline Configuration</p></li>
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>Phase Transitions</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 4. Committee Service -->
+        <div class="service-card border-top-process">
+            <div class="card-header">
+                <div class="card-icon icon-process"><i class="fas fa-users"></i></div>
+                <div class="card-title">Committee Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>Member Assignment</p></li>
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>Defense Panel Formation</p></li>
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>Secretary Management</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- ROW 2: EVALUATION & DATA -->
+        <!-- 5. Evaluation Service -->
+        <div class="service-card border-top-core">
+            <div class="card-header">
+                <div class="card-icon icon-core"><i class="fas fa-clipboard-check"></i></div>
+                <div class="card-title">Evaluation Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>Scoring Logic &amp; Rubrics</p></li>
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>Process I &amp; II Forms</p></li>
+                    <li class="resp-item"><div class="resp-bullet core-bullet"></div><p>Criteria Management</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 6. Grading Service -->
+        <div class="service-card border-top-process">
+            <div class="card-header">
+                <div class="card-icon icon-process"><i class="fas fa-calculator"></i></div>
+                <div class="card-title">Grading Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>Total Score Calculation</p></li>
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>Letter Grade Conversion</p></li>
+                    <li class="resp-item"><div class="resp-bullet process-bullet"></div><p>Official Transcript Push</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 7. Report Service -->
+        <div class="service-card border-top-support">
+            <div class="card-header">
+                <div class="card-icon icon-support"><i class="fas fa-file-upload"></i></div>
+                <div class="card-title">Report Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>File Upload (PDF/Docx)</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Version Control</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Plagiarism Check Integration</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 8. Feedback Service -->
+        <div class="service-card border-top-support">
+            <div class="card-header">
+                <div class="card-icon icon-support"><i class="fas fa-comment-dots"></i></div>
+                <div class="card-title">Feedback Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Reviewer Comments</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Supervisor Advice</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Revision Requests</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- ROW 3: COMMUNICATION & ANALYTICS -->
+        <!-- 9. Notification Service -->
+        <div class="service-card border-top-support">
+            <div class="card-header">
+                <div class="card-icon icon-support"><i class="fas fa-bell"></i></div>
+                <div class="card-title">Notification Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Kafka Event Consumer</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Email/SMS Alerts</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>In-System Notifications</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 10. Messaging Service -->
+        <div class="service-card border-top-support">
+            <div class="card-header">
+                <div class="card-icon icon-support"><i class="fas fa-envelope"></i></div>
+                <div class="card-title">Messaging Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Student-Teacher Chat</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Chat History</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Real-time Socket.io</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 11. Analytics Service -->
+        <div class="service-card border-top-support">
+            <div class="card-header">
+                <div class="card-icon icon-support"><i class="fas fa-chart-pie"></i></div>
+                <div class="card-title">Analytics Service</div>
+            </div>
+            <div class="card-body">
+                <ul class="resp-list">
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Department Statistics</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Performance Dashboards</p></li>
+                    <li class="resp-item"><div class="resp-bullet support-bullet"></div><p>Export Reports</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 12. Placeholder / Empty -->
+        <div class="service-card" style="border: 1px dashed rgba(255,255,255,0.1); background: transparent; justify-content: center; align-items: center;">
+            <div style="text-align: center; color: #475569;">
+                <i class="fas fa-server" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                <p style="font-size: 0.8rem;">Future Services</p>
+                <p style="font-size: 0.6rem;">Scalable Architecture</p>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <p>National University of Mongolia • School of ITE</p>
+        <p>Page 09</p>
+    </div>
+</div>
+</body>
+</html>

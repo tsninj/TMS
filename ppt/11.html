@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Future Work Roadmap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120;
+            color: #ffffff;
+        }
+        .slide-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #0B1120;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Background Elements */
+        .bg-shape {
+            position: absolute;
+            opacity: 0.05;
+            z-index: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(80px);
+        }
+        .shape-1 {
+            top: -100px;
+            left: -50px;
+            width: 500px;
+            height: 500px;
+            background-color: #3B82F6;
+        }
+        .shape-2 {
+            bottom: -50px;
+            right: -50px;
+            width: 400px;
+            height: 400px;
+            background-color: #8B5CF6;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+            z-index: 10;
+        }
+        .chapter-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #60A5FA;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .title-mn {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #F8FAFC;
+            line-height: 1.2;
+        }
+        .title-en {
+            font-size: 1.15rem;
+            color: #94A3B8;
+            font-weight: 400;
+            margin-left: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid #334155;
+        }
+
+        /* Timeline Container */
+        .timeline-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+            padding: 0 20px;
+        }
+
+        /* The Main Line */
+        .timeline-track {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        /* Progress Overlay on Track */
+        .timeline-progress {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 15%; /* Initial progress indication */
+            height: 4px;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6); /* Kept gradient on tiny element or use solid color */
+            background: #3B82F6;
+            border-radius: 2px;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        /* Grid for Items */
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            width: 100%;
+            height: 400px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .roadmap-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Connector Dots on the Line */
+        .connector-dot {
+            width: 20px;
+            height: 20px;
+            background-color: #0B1120;
+            border: 4px solid #475569;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            transition: all 0.3s ease;
+        }
+
+        /* Specific Colors for Dots */
+        .dot-1 { border-color: #38BDF8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); background: #38BDF8; } /* Light Blue */
+        .dot-2 { border-color: #3B82F6; } /* Blue */
+        .dot-3 { border-color: #8B5CF6; } /* Purple */
+        .dot-4 { border-color: #D946EF; } /* Fuchsia */
+        .dot-5 { border-color: #F43F5E; } /* Rose */
+
+        /* Vertical connector lines */
+        .vertical-line {
+            position: absolute;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            height: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .line-up { bottom: 50%; margin-bottom: 10px; }
+        .line-down { top: 50%; margin-top: 10px; }
+
+        /* Cards */
+        .roadmap-card {
+            width: 200px;
+            background-color: #1E293B;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            position: absolute;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .roadmap-card:hover {
+            transform: scale(1.05);
+            z-index: 20;
+            background-color: #253346;
+        }
+
+        /* Positioning Cards: Alternating Top/Bottom */
+        .card-top { bottom: 60%; }
+        .card-bottom { top: 60%; }
+
+        /* Card Content */
+        .card-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .c-cyan { background-color: rgba(6, 182, 212, 0.15); color: #22D3EE; border: 1px solid rgba(6, 182, 212, 0.3); }
+        .c-blue { background-color: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .c-purple { background-color: rgba(139, 92, 246, 0.15); color: #A78BFA; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .c-pink { background-color: rgba(236, 72, 153, 0.15); color: #F472B6; border: 1px solid rgba(236, 72, 153, 0.3); }
+        .c-rose { background-color: rgba(244, 63, 94, 0.15); color: #FB7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+
+        .card-title-mn {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #F8FAFC;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        .card-title-en {
+            font-size: 0.75rem;
+            color: #94A3B8;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .card-desc {
+            font-size: 0.7rem;
+            color: #64748B;
+            line-height: 1.4;
+        }
+
+        /* Card Border Colors */
+        .border-cyan:hover { border-color: #22D3EE; box-shadow: 0 4px 20px rgba(34, 211, 238, 0.1); }
+        .border-blue:hover { border-color: #60A5FA; box-shadow: 0 4px 20px rgba(96, 165, 250, 0.1); }
+        .border-purple:hover { border-color: #A78BFA; box-shadow: 0 4px 20px rgba(167, 139, 250, 0.1); }
+        .border-pink:hover { border-color: #F472B6; box-shadow: 0 4px 20px rgba(244, 114, 182, 0.1); }
+        .border-rose:hover { border-color: #FB7185; box-shadow: 0 4px 20px rgba(251, 113, 133, 0.1); }
+
+        /* Number Indicators */
+        .step-number {
+            position: absolute;
+            font-size: 3rem;
+            font-weight: 800;
+            opacity: 0.05;
+            color: white;
+            z-index: 0;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <!-- Backgrounds -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <p class="chapter-label">Future Work</p>
+            <div style="display: flex; align-items: baseline;">
+                <h1 class="title-mn">Цаашдын хөгжүүлэлт</h1>
+                <span class="title-en">Roadmap &amp; Planned Enhancements</span>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-gray-400">Development Phases</p>
+        </div>
+    </div>
+    <!-- Timeline Content -->
+    <div class="timeline-wrapper">
+        <div class="timeline-track"></div>
+        <div class="timeline-progress"></div>
+        <div class="roadmap-grid">
+            <!-- Item 1: Performance Testing -->
+            <div class="roadmap-item">
+                <div class="connector-dot dot-1"></div>
+                <div class="vertical-line line-up"></div>
+                <div class="roadmap-card card-top border-cyan">
+                    <span class="step-number">01</span>
+                    <div class="card-icon-box c-cyan">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <p class="card-title-mn">Ачааллын тест</p>
+                    <p class="card-title-en">Performance Testing</p>
+                    <p class="card-desc">Simulate 100+ concurrent users to validate non-blocking architecture stability.</p>
+                </div>
+            </div>
+            <!-- Item 2: Analytics -->
+            <div class="roadmap-item">
+                <div class="connector-dot dot-2"></div>
+                <div class="vertical-line line-down"></div>
+                <div class="roadmap-card card-bottom border-blue">
+                    <span class="step-number">02</span>
+                    <div class="card-icon-box c-blue">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <p class="card-title-mn">Нарийвчилсан анализ</p>
+                    <p class="card-title-en">Enhanced Analytics</p>
+                    <p class="card-desc">Advanced dashboard metrics for department heads to track thesis progress trends.</p>
+                </div>
+            </div>
+            <!-- Item 3: Mobile App -->
+            <div class="roadmap-item">
+                <div class="connector-dot dot-3"></div>
+                <div class="vertical-line line-up"></div>
+                <div class="roadmap-card card-top border-purple">
+                    <span class="step-number">03</span>
+                    <div class="card-icon-box c-purple">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <p class="card-title-mn">Мобайл апп</p>
+                    <p class="card-title-en">Mobile Application</p>
+                    <p class="card-desc">Native app integration for students to receive push notifications and view grades.</p>
+                </div>
+            </div>
+            <!-- Item 4: AI Plagiarism -->
+            <div class="roadmap-item">
+                <div class="connector-dot dot-4"></div>
+                <div class="vertical-line line-down"></div>
+                <div class="roadmap-card card-bottom border-pink">
+                    <span class="step-number">04</span>
+                    <div class="card-icon-box c-pink">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <p class="card-title-mn">AI Плагиат шалгах</p>
+                    <p class="card-title-en">AI Plagiarism Detection</p>
+                    <p class="card-desc">Integrate NLP models to automatically detect similarities in thesis submissions.</p>
+                </div>
+            </div>
+            <!-- Item 5: Full TMS -->
+            <div class="roadmap-item">
+                <div class="connector-dot dot-5"></div>
+                <div class="vertical-line line-up"></div>
+                <div class="roadmap-card card-top border-rose">
+                    <span class="step-number">05</span>
+                    <div class="card-icon-box c-rose">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <p class="card-title-mn">TMS Платформ</p>
+                    <p class="card-title-en">Full TMS Platform</p>
+                    <p class="card-desc">Expand microservices to cover Master's and PhD thesis lifecycles across all schools.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        <p>National University of Mongolia • School of ITE</p>
+        <p>Page 16</p>
+    </div>
+</div>
+</body>
+</html>

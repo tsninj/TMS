@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Thesis Defense Title Slide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120; /* Dark Navy */
+            color: #ffffff;
+        }
+        .slide-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #0B1120;
+        }
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+            background-color: #3B82F6;
+        }
+        .decorative-line {
+            position: absolute;
+            height: 2px;
+            background-color: #3B82F6;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 40px 80px;
+            text-align: center;
+        }
+        .university-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            width: 100%;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 1.5rem;
+        }
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0B1120;
+            margin-right: 1.5rem;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .uni-text {
+            text-align: left;
+        }
+        .thesis-title-mn {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: #60A5FA; /* Blue-400 */
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+        .thesis-title-en {
+            font-size: 1.75rem;
+            font-weight: 400;
+            color: #E2E8F0;
+            margin-bottom: 3rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(30, 41, 59, 0.5); /* Slate-800 with opacity */
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .detail-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94A3B8; /* Slate-400 */
+            margin-bottom: 0.25rem;
+        }
+        .detail-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #F8FAFC;
+        }
+        .program-info {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64748B;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+    <!-- Decorative Elements -->
+    <div class="decorative-circle" style="width: 600px; height: 600px; top: -200px; right: -200px;"></div>
+    <div class="decorative-circle" style="width: 400px; height: 400px; bottom: -150px; left: -100px; background-color: #1E40AF;"></div>
+    <div class="decorative-line" style="width: 100%; top: 130px; left: 0;"></div>
+    <div class="content-wrapper">
+        <!-- University Header -->
+        <div class="university-header">
+            <div class="logo-placeholder">
+                <i class="fas fa-university"></i>
+            </div>
+            <div class="uni-text">
+                <p class="text-lg font-bold uppercase tracking-wide text-white">Монгол Улсын Их Сургууль</p>
+                <p class="text-sm text-gray-400">Мэдээллийн Технологи, Электроникийн Сургууль</p>
+                <p class="text-xs text-blue-400 mt-1">National University of Mongolia • School of ITE</p>
+            </div>
+        </div>
+        <!-- Titles -->
+        <div class="w-full max-w-5xl">
+            <h1 class="thesis-title-mn">
+                Үзэгдлээр хөтлүүлсэн архитектурт суурилсан реактив программчлал
+            </h1>
+            <h2 class="thesis-title-en">
+                Reactive Programming Implementation based on Event-Driven Architecture
+            </h2>
+        </div>
+        <!-- Details Grid -->
+        <div class="details-grid">
+            <div class="detail-item border-r border-gray-700 pr-4">
+                <span class="detail-label"><i class="fas fa-user-graduate mr-2 text-blue-500"></i> Гүйцэтгэсэн / Author</span>
+                <p class="detail-value">Ц. Нинжбадгар (Ts. Ninjbadgar)</p>
+                <p class="text-sm text-gray-400">Student ID: 22B1NUM1811</p>
+            </div>
+            <div class="detail-item pl-4">
+                <span class="detail-label"><i class="fas fa-chalkboard-teacher mr-2 text-blue-500"></i> Удирдагч / Supervisor</span>
+                <p class="detail-value">Б. Батням</p>
+                <p class="text-sm text-gray-400">Ph.D, Professor</p>
+            </div>
+            <div class="detail-item border-r border-gray-700 pr-4 pt-4 border-t border-gray-700 mt-2">
+                <span class="detail-label"><i class="fas fa-code-branch mr-2 text-blue-500"></i> Хөтөлбөр / Program</span>
+                <p class="detail-value">Программ Хангамж (D061302)</p>
+                <p class="text-sm text-gray-400">Software Engineering</p>
+            </div>
+            <div class="detail-item pl-4 pt-4 border-t border-gray-700 mt-2">
+                <span class="detail-label"><i class="far fa-calendar-alt mr-2 text-blue-500"></i> Огноо / Date</span>
+                <p class="detail-value">2026 оны 03 сар</p>
+                <p class="text-sm text-gray-400">Ulaanbaatar, Mongolia</p>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Info -->
+    <div class="program-info">
+        <p>Бакалаврын судалгааны ажил хамгаалуулах зөвлөл • Department of Information &amp; Computer Science</p>
+    </div>
+</div>
+</body>
+</html>
