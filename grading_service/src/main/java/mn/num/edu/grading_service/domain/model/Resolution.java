@@ -4,54 +4,53 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 public class Resolution {
-    private UUID id;
-    private UUID workflowId;
-    private String title;
+    private String id;
+    private String workflowId;
+    private String resolutionNumber;
     private int totalStudents;
-    private int passedStudents;
-    private int failedStudents;
+    private int passedCount;
+    private int failedCount;
     private LocalDateTime generatedAt;
     private List<ResolutionStudentResult> studentResults;
 
     public Resolution(
-            UUID id,
-            UUID workflowId,
-            String title,
+            String id,
+            String workflowId,
+            String resolutionNumber,
             int totalStudents,
-            int passedStudents,
-            int failedStudents,
+            int passedCount,
+            int failedCount,
             LocalDateTime generatedAt,
             List<ResolutionStudentResult> studentResults
     ) {
         this.id = id;
         this.workflowId = workflowId;
-        this.title = title;
+        this.resolutionNumber = resolutionNumber;
         this.totalStudents = totalStudents;
-        this.passedStudents = passedStudents;
-        this.failedStudents = failedStudents;
+        this.passedCount = passedCount;
+        this.failedCount = failedCount;
         this.generatedAt = generatedAt;
         this.studentResults = studentResults;
     }
 
     public static Resolution create(
-            UUID workflowId,
-            String title,
+            String workflowId,
+            String resolutionNumber,
             int totalStudents,
-            int passedStudents,
-            int failedStudents,
+            int passedCount,
+            int failedCount,
             List<ResolutionStudentResult> studentResults
     ) {
         return new Resolution(
-                UUID.randomUUID(),
+                java.util.UUID.randomUUID().toString(),
                 workflowId,
-                title,
+                resolutionNumber,
                 totalStudents,
-                passedStudents,
-                failedStudents,
+                passedCount,
+                failedCount,
                 LocalDateTime.now(),
                 studentResults
         );

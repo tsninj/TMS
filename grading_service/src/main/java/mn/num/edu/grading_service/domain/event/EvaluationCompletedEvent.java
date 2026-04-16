@@ -8,7 +8,8 @@ public record EvaluationCompletedEvent (
      String studentId,
      String workflowId,
      String stageId,
-     Double stageScore,
+     String stageName,
+     Double totalScore,
      LocalDateTime occurredAt
 ){
 

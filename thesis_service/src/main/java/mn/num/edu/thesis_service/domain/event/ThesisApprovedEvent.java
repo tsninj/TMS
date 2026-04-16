@@ -6,6 +6,7 @@ import java.util.UUID;
 public record ThesisApprovedEvent(
         String thesisId,
         String studentId,
+        String thesisTitle,
         LocalDateTime occurredAt
 ) {
 }

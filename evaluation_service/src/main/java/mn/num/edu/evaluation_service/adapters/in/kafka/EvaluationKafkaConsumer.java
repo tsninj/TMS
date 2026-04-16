@@ -14,8 +14,15 @@ public class EvaluationKafkaConsumer {
 
     public EvaluationKafkaConsumer(WorkflowStageActivationHandler workflowStageActivationHandler) {
         this.workflowStageActivationHandler = workflowStageActivationHandler;
-        log.info("Recieved event from Kafka workflow.stage.created");
+        log.info("Evaluation Kafka consumer initialized for workflow-stage-activated");
     }
 
-
+    @KafkaListener(
+            topics = "workflow-stage-activated",
+            groupId = "evaluation-service-group",
+            containerFactory = "workflowStageActivatedKafkaListenerContainerFactory"
+    )
+    public void consumeWorkflowStageActivated(WorkflowStageActivatedEvent event) {
+        workflowStageActivationHandler.handle(event).subscribe();
+    }
 }

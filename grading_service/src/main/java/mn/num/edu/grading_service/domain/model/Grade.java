@@ -11,41 +11,29 @@ public class Grade {
     private String thesisId;
     private String studentId;
     private String workflowId;
-
-    private Double processScore;
-    private Double defenseScore;
-    private Double finalScore;
-
+    private String resolutionId;
+    private Double totalScore;
     private GradeStatus status;
-    private Boolean published;
-
     private LocalDateTime calculatedAt;
-    private LocalDateTime publishedAt;
 
     public Grade(
             String id,
             String thesisId,
             String studentId,
             String workflowId,
-            Double processScore,
-            Double defenseScore,
-            Double finalScore,
+            String resolutionId,
+            Double totalScore,
             GradeStatus status,
-            Boolean published,
-            LocalDateTime calculatedAt,
-            LocalDateTime publishedAt
+            LocalDateTime calculatedAt
     ) {
         this.id = id;
         this.thesisId = thesisId;
         this.studentId = studentId;
         this.workflowId = workflowId;
-        this.processScore = processScore;
-        this.defenseScore = defenseScore;
-        this.finalScore = finalScore;
+        this.resolutionId = resolutionId;
+        this.totalScore = totalScore;
         this.status = status;
-        this.published = published;
         this.calculatedAt = calculatedAt;
-        this.publishedAt = publishedAt;
     }
 
     public static Grade create(String thesisId, String studentId, String workflowId) {
@@ -54,27 +42,16 @@ public class Grade {
                 thesisId,
                 studentId,
                 workflowId,
-                0.0,
-                0.0,
+                null,
                 0.0,
                 GradeStatus.PENDING,
-                false,
-                null,
                 null
         );
     }
 
-    public void updateScores(Double processScore, Double defenseScore, Double finalScore, GradeStatus status) {
-        this.processScore = processScore;
-        this.defenseScore = defenseScore;
-        this.finalScore = finalScore;
+    public void updateScore(Double totalScore, GradeStatus status) {
+        this.totalScore = totalScore;
         this.status = status;
         this.calculatedAt = LocalDateTime.now();
     }
-
-    public void publish() {
-        this.published = true;
-        this.publishedAt = LocalDateTime.now();
-    }
-
 }

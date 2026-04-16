@@ -1,6 +1,5 @@
 package mn.num.edu.notification_service.adapter.out.persistence;
 
-import lombok.RequiredArgsConstructor;
 import mn.num.edu.notification_service.application.port.out.LoadNotificationPort;
 import mn.num.edu.notification_service.application.port.out.SaveNotificationPort;
 import mn.num.edu.notification_service.domain.model.Notification;
@@ -13,10 +12,13 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Component
-@RequiredArgsConstructor
 public class NotificationPersistenceAdapter implements SaveNotificationPort, LoadNotificationPort {
 
     private final NotificationR2dbcRepository repository;
+
+    public NotificationPersistenceAdapter(NotificationR2dbcRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Mono<Notification> save(Notification notification) {
@@ -39,28 +41,29 @@ public class NotificationPersistenceAdapter implements SaveNotificationPort, Loa
     }
 
     private NotificationEntity toEntity(Notification n) {
-        return NotificationEntity.builder()
-                .id(n.getId())
-                .userId(n.getUserId())
-                .title(n.getTitle())
-                .message(n.getMessage())
-                .type(n.getType().name())
-                .status(n.getStatus().name())
-                .createdAt(n.getCreatedAt())
-                .sentAt(n.getSentAt())
-                .build();
+        return new NotificationEntity(
+                n.getId(),
+                n.getUserId(),
+                n.getTitle(),
+                n.getMessage(),
+                n.getType().name(),
+                null,
+                n.getStatus().name(),
+                n.getCreatedAt(),
+                n.getSentAt()
+        );
     }
 
     private Notification toDomain(NotificationEntity e) {
-        return Notification.builder()
-                .id(e.getId())
-                .userId(e.getUserId())
-                .title(e.getTitle())
-                .message(e.getMessage())
-                .type(NotificationType.valueOf(e.getType()))
-                .status(NotificationStatus.valueOf(e.getStatus()))
-                .createdAt(e.getCreatedAt())
-                .sentAt(e.getSentAt())
-                .build();
+        return new Notification(
+                e.getId(),
+                e.getUserId(),
+                e.getTitle(),
+                e.getMessage(),
+                NotificationType.valueOf(e.getType()),
+                NotificationStatus.valueOf(e.getStatus()),
+                e.getCreatedAt(),
+                e.getSentAt()
+        );
     }
 }

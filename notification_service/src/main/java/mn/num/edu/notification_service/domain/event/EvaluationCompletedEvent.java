@@ -1,11 +1,14 @@
 package mn.num.edu.notification_service.domain.event;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 public record EvaluationCompletedEvent(
-        UUID evaluationId,
-        UUID studentId,
-        UUID thesisId,
+        String evaluationId,
+        String thesisId,
+        String studentId,
+        String workflowId,
+        String stageId,
         String stageName,
-        Double totalScore
+        Double totalScore,
+        LocalDateTime occurredAt
 ) {}

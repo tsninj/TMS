@@ -16,7 +16,7 @@
 //    @Override
 //    public Mono<Void> publishStageActivated(WorkFlowStageActivatedEvent event) {
 //        return Mono.fromFuture(
-//                kafkaTemplate.send("workflow.stage.activated", event.stageId().toString(), event)
+//                kafkaTemplate.send("workflow-stage-activated", event.stageId().toString(), event)
 //        )    .doOnSuccess(result -> {
 //                    System.out.println("✅ Kafka event sent");
 //                    System.out.println("topic = " + result.getRecordMetadata().topic());

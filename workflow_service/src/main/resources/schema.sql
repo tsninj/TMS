@@ -13,5 +13,5 @@ CREATE TABLE workflow_stages (
                                  end_date DATE NOT NULL,
                                  weight_percent NUMERIC(5,2) NOT NULL,
                                  status VARCHAR(50) NOT NULL,
-    stage INT NOT NULL
+    stage_order INT NOT NULL
 );

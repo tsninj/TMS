@@ -78,6 +78,11 @@ public class KafkaConfig {
     }
 
     @Bean
+    public NewTopic workflowDeadlineApproachingTopic() {
+        return new NewTopic("workflow-deadline-approaching", 1, (short) 1);
+    }
+
+    @Bean
     public NewTopic thesisApprovedTopic() {
         return new NewTopic("thesis-approved", 1, (short) 1);
     }

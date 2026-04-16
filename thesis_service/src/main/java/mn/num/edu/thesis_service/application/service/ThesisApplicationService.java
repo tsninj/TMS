@@ -104,6 +104,7 @@ public class ThesisApplicationService implements
                                             new ThesisApprovedEvent(
                                                     saved.getId(),
                                                     saved.getStudentId(),
+                                                    saved.getTitleMn(),
                                                     LocalDateTime.now()
                                             )
                                     ).then(

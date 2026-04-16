@@ -1,18 +1,22 @@
 package mn.num.edu.workflow_service.adapters.in.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import mn.num.edu.workflow_service.domain.event.CommitteeCreatedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
-@RequiredArgsConstructor
 public class WorkflowKafkaConsumer {
 
+    private static final Logger log = LoggerFactory.getLogger(WorkflowKafkaConsumer.class);
+
     private final ObjectMapper objectMapper;
+
+    public WorkflowKafkaConsumer(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @KafkaListener(topics = "committee-created", groupId = "workflow-service")
     public void handleCommitteeCreated(String payload) {

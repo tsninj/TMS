@@ -60,21 +60,21 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic workflowStageActivatedTopic() {
-        return new NewTopic("workflow.stage.activated", 1, (short) 1);
+        return new NewTopic("workflow-stage-activated", 1, (short) 1);
     }
 
     @Bean
     public NewTopic evaluationSubmittedTopic() {
-        return new NewTopic("evaluation.submitted", 1, (short) 1);
+        return new NewTopic("evaluation-submitted", 1, (short) 1);
     }
 
     @Bean
     public NewTopic evaluationUpdatedTopic() {
-        return new NewTopic("evaluation.updated", 1, (short) 1);
+        return new NewTopic("evaluation-updated", 1, (short) 1);
     }
 
     @Bean
     public NewTopic evaluationCompletedTopic() {
-        return new NewTopic("evaluation.completed", 1, (short) 1);
+        return new NewTopic("evaluation-completed", 1, (short) 1);
     }
 }

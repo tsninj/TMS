@@ -1,9 +1,7 @@
 package mn.num.edu.notification_service.adapter.in.web;
 
-import lombok.RequiredArgsConstructor;
 import mn.num.edu.notification_service.application.port.out.LoadNotificationPort;
 import mn.num.edu.notification_service.domain.model.Notification;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -19,10 +17,13 @@ import reactor.core.publisher.Mono;
 @Tag(name = "Notification API", description = "Notification endpoints")
 @RestController
 @RequestMapping("/api/notifications")
-@RequiredArgsConstructor
 public class NotificationController {
 
     private final LoadNotificationPort loadNotificationPort;
+
+    public NotificationController(LoadNotificationPort loadNotificationPort) {
+        this.loadNotificationPort = loadNotificationPort;
+    }
 
     @Operation(summary = "Get notifications by userId")
     @ApiResponses({

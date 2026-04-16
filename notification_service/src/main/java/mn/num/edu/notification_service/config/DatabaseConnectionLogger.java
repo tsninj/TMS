@@ -1,18 +1,22 @@
 package mn.num.edu.notification_service.config;
 
 import io.r2dbc.spi.ConnectionFactory;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-@Slf4j
 @Component
-@RequiredArgsConstructor
 public class DatabaseConnectionLogger implements CommandLineRunner {
 
+    private static final Logger log = LoggerFactory.getLogger(DatabaseConnectionLogger.class);
+
     private final ConnectionFactory connectionFactory;
+
+    public DatabaseConnectionLogger(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
 
     @Override
     public void run(String... args) {

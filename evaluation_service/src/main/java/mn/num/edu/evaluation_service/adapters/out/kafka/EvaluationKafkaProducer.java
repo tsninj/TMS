@@ -19,16 +19,16 @@ public class EvaluationKafkaProducer implements EvaluationEventPublisherPort {
 
     @Override
     public Mono<Void> publishSubmitted(EvaluationSubmittedEvent event) {
-        return Mono.fromFuture(kafkaTemplate.send("evaluation.submitted", event.evaluationId().toString(), event)).then();
+        return Mono.fromFuture(kafkaTemplate.send("evaluation-submitted", event.evaluationId().toString(), event)).then();
     }
 
     @Override
     public Mono<Void> publishUpdated(EvaluationUpdatedEvent event) {
-        return Mono.fromFuture(kafkaTemplate.send("evaluation.updated", event.evaluationId().toString(), event)).then();
+        return Mono.fromFuture(kafkaTemplate.send("evaluation-updated", event.evaluationId().toString(), event)).then();
     }
 
     @Override
     public Mono<Void> publishCompleted(EvaluationCompletedEvent event) {
-        return Mono.fromFuture(kafkaTemplate.send("evaluation.completed", event.evaluationId().toString(), event)).then();
+        return Mono.fromFuture(kafkaTemplate.send("evaluation-completed", event.evaluationId().toString(), event)).then();
     }
 }

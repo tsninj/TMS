@@ -16,7 +16,6 @@ import java.util.UUID;
 
 public class GenerateResolutionService implements GenerateResolutionUseCase {
 
-    private final ThesisQueryPort thesisQueryPort;
     private final GradeRepositoryPort gradeRepositoryPort;
     private final ResolutionRepositoryPort resolutionRepositoryPort;
     private final EventPublisherPort eventPublisherPort;
@@ -31,8 +30,7 @@ public class GenerateResolutionService implements GenerateResolutionUseCase {
 
     @Override
     public Mono<Void> generate( String workflowId) {
-        return thesisQueryPort.findByWorkflowId(workflowId)
-                .flatMap(thesis -> gradeRepositoryPort.findByThesisId(thesis.thesisId()))
+        return gradeRepositoryPort.findByWorkflowId(workflowId)
                 .collectList()
                 .flatMap(grades -> {
                     int totalStudents = grades.size();

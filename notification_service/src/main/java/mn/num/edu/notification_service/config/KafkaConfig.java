@@ -49,46 +49,46 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic thesisApprovedTopic() {
-        return TopicBuilder.name("thesis.approved").partitions(1).replicas(1).build();
+        return TopicBuilder.name("thesis-approved").partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic committeeAssignedTopic() {
-        return TopicBuilder.name("committee.assigned").partitions(1).replicas(1).build();
+        return TopicBuilder.name("committee-assigned").partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic reportSubmittedTopic() {
-        return TopicBuilder.name("report.submitted").partitions(1).replicas(1).build();
+        return TopicBuilder.name("report-submitted").partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic feedbackAddedTopic() {
-        return TopicBuilder.name("feedback.added").partitions(1).replicas(1).build();
+        return TopicBuilder.name("feedback-added").partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic evaluationCompletedTopic() {
-        return TopicBuilder.name("evaluation.completed").partitions(1).replicas(1).build();
+        return TopicBuilder.name("evaluation-completed").partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic finalGradeCalculatedTopic() {
-        return TopicBuilder.name("final.grade.calculated").partitions(1).replicas(1).build();
+        return TopicBuilder.name("final-grade-calculated").partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic workflowDeadlineSetTopic() {
-        return TopicBuilder.name("workflow.deadline.set").partitions(1).replicas(1).build();
+        return TopicBuilder.name("workflow-deadline-set").partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic notificationSentTopic() {
-        return TopicBuilder.name("notification.sent").partitions(1).replicas(1).build();
+        return TopicBuilder.name("notification-sent").partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic notificationFailedTopic() {
-        return TopicBuilder.name("notification.failed").partitions(1).replicas(1).build();
+        return TopicBuilder.name("notification-failed").partitions(1).replicas(1).build();
     }
-}
+}

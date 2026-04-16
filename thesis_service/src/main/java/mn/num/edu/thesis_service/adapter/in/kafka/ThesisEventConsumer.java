@@ -56,7 +56,7 @@ public class ThesisEventConsumer {
 //        thesisApplicationService.handleStudentRegistered(event).subscribe();
 //    }
 
-    @KafkaListener(topics = "committee-student-assigned", groupId = "thesis-service-group", containerFactory = "committeeAssignedKafkaListenerContainerFactory")
+    @KafkaListener(topics = "committee-assigned", groupId = "thesis-service-group", containerFactory = "committeeAssignedKafkaListenerContainerFactory")
     public void consumeCommitteeAssigned(CommitteeAssignedEvent event) {
         thesisApplicationService.handleCommitteeAssigned(event).subscribe(
                 unused -> {},

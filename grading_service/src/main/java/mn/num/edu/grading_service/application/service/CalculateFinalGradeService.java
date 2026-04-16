@@ -10,11 +10,9 @@ import mn.num.edu.grading_service.domain.service.GradeDomainService;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class CalculateFinalGradeService implements CalculateFinalGradeUseCase {
 
-    private final EvaluationQueryPort evaluationQueryPort;
     private final GradeRepositoryPort gradeRepositoryPort;
     private final EventPublisherPort eventPublisherPort;
     private final GradeDomainService gradeDomainService;
@@ -22,26 +20,28 @@ public class CalculateFinalGradeService implements CalculateFinalGradeUseCase {
     public CalculateFinalGradeService(GradeRepositoryPort gradeRepositoryPort,
                                       EventPublisherPort eventPublisherPort,
                                       GradeDomainService gradeDomainService) {
-        this.evaluationQueryPort = evaluationQueryPort;
         this.gradeRepositoryPort = gradeRepositoryPort;
         this.eventPublisherPort = eventPublisherPort;
         this.gradeDomainService = gradeDomainService;
     }
 
     @Override
-    public Mono<Void> calculateForThesis( String thesisId,  String studentId,  String workflowId) {
-        return evaluationQueryPort.findStageScoresByThesisId(thesisId)
-                .reduce(0.0, Double::sum)
-                .flatMap(sum -> {
-                    double totalScore = gradeDomainService.calculateTotalScore(sum);
+    public Mono<Void> calculateForThesis(String thesisId, String studentId, String workflowId, Double stageScore) {
+        double incomingScore = stageScore == null ? 0.0 : stageScore;
+
+        return gradeRepositoryPort.findByThesisId(thesisId)
+                .switchIfEmpty(Mono.just(Grade.create(thesisId, studentId, workflowId)))
+                .flatMap(current -> {
+                    double currentScore = current.getTotalScore() == null ? 0.0 : current.getTotalScore();
+                    double totalScore = gradeDomainService.calculateTotalScore(currentScore + incomingScore);
                     GradeStatus status = gradeDomainService.determineStatus(totalScore);
 
                     Grade grade = new Grade(
-                            UUID.randomUUID().toString(),
+                            current.getId(),
                             thesisId,
                             studentId,
                             workflowId,
-                            null,
+                            current.getResolutionId(),
                             totalScore,
                             status,
                             LocalDateTime.now()

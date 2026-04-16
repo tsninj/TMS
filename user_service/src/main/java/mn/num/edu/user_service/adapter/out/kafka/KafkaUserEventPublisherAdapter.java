@@ -28,7 +28,7 @@ public class KafkaUserEventPublisherAdapter implements UserEventPublisherPort {
     @Override
     public Mono<Void> publishUserCreated(UserCreatedEvent event) {
         return Mono.fromFuture(
-                        kafkaTemplate.send("user-created-events", event.getPayload().getUserId(), event)
+                        kafkaTemplate.send(userCreatedTopic, event.getPayload().getUserId(), event)
                 )
                 .doOnSuccess(result ->
                         log.info("✅ Event sent to Kafka. topic={}, partition={}, offset={}",
@@ -45,7 +45,7 @@ public class KafkaUserEventPublisherAdapter implements UserEventPublisherPort {
     @Override
     public Mono<Void> publishStudentCreated(UserCreatedEvent event) {
         return Mono.fromFuture(
-                        kafkaTemplate.send("user-created-events", event.getPayload().getUserId(), event)
+                        kafkaTemplate.send(userCreatedTopic, event.getPayload().getUserId(), event)
                 )
                 .doOnSuccess(result ->
                         log.info("✅ Student Event sent to Kafka. topic={}, partition={}, offset={}, depId={} ",
@@ -64,7 +64,7 @@ public class KafkaUserEventPublisherAdapter implements UserEventPublisherPort {
     @Override
     public Mono<Void> publishTeacherCreated(UserCreatedEvent event) {
         return Mono.fromFuture(
-                        kafkaTemplate.send("user-created-events", event.getPayload().getUserId(), event)
+                        kafkaTemplate.send(userCreatedTopic, event.getPayload().getUserId(), event)
                 )
                 .doOnSuccess(result ->
                         log.info("✅ Teacher Event sent to Kafka. topic={}, partition={}, offset={}, depId={} ",
@@ -83,7 +83,7 @@ public class KafkaUserEventPublisherAdapter implements UserEventPublisherPort {
     @Override
     public Mono<Void> publishDepartmentCreated(UserCreatedEvent event) {
         return Mono.fromFuture(
-                        kafkaTemplate.send("user-created-events", event.getPayload().getUserId(), event)
+                        kafkaTemplate.send(userCreatedTopic, event.getPayload().getUserId(), event)
                 )
                 .doOnSuccess(result ->
                         log.info("✅Department  Event sent to Kafka. topic={}, partition={}, offset={}, depId={} ",

@@ -19,7 +19,7 @@ public class UserEventProducer {
         UserCreatedEvent event =
                 new UserCreatedEvent(user.getId(), user.getSystemRole().name());
 
-        kafkaTemplate.send("user-created", user.getId(), event);
-        log.info("Published user-created event for userId={}", user.getId());
+        kafkaTemplate.send("user-created-events", user.getId(), event);
+        log.info("Published user-created-events event for userId={}", user.getId());
     }
 }

@@ -1,9 +1,12 @@
 package mn.num.edu.notification_service.domain.event;
-import java.util.UUID;
+
+import java.time.LocalDateTime;
 
 public record FinalGradeCalculatedEvent(
-        UUID thesisId,
-        UUID studentId,
-        Double finalScore,
-        String letterGrade
+        String thesisId,
+        String studentId,
+        String workflowId,
+        Double totalScore,
+        String status,
+        LocalDateTime occurredAt
 ) {}

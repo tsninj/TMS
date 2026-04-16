@@ -22,7 +22,7 @@ public class GradingKafkaConsumer {
     @KafkaListener(topics = "evaluation-completed", groupId = "grading-service-group")
     public void consumeEvaluationCompleted(EvaluationCompletedEvent event) {
         calculateFinalGradeUseCase
-                .calculateForThesis(event.thesisId(), event.studentId(), event.workflowId())
+                .calculateForThesis(event.thesisId(), event.studentId(), event.workflowId(), event.totalScore())
                 .subscribe();
     }
 
