@@ -17,27 +17,34 @@ public class WorkflowKafkaProducer implements WorkflowEventPublisherPort {
     @Override
     public void publishWorkflowCreated(WorkflowCreatedEvent event) {
         kafkaTemplate.send("workflow.created", event);
+        log.info("workflow.created.event");
+
     }
 
     @Override
     public void publishWorkflowStageCreated(WorkflowStageCreatedEvent event) {
         kafkaTemplate.send("workflow.stage.created", event);
+        log.info("workflow.stage.created.event");
+
     }
 
     @Override
     public void publishWorkflowStageActivated(WorkflowStageActivatedEvent event) {
         kafkaTemplate.send("workflow.stage.activated", event);
-        log.info("workflow.stage.activated event");
+        log.info("workflow.stage.activated.event");
     }
 
     @Override
     public void publishWorkflowStageClosed(WorkflowStageClosedEvent event) {
         kafkaTemplate.send("workflow.stage.closed", event);
+        log.info("workflow.stage.closed.event");
+
     }
 
     @Override
     public void publishWorkflowDeadlineApproaching(WorkflowDeadlineApproachingEvent event) {
         kafkaTemplate.send("workflow.deadline.approaching", event);
+        log.info("workflow.deadline.approaching.event");
     }
 
     @Override

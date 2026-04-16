@@ -13,7 +13,7 @@ public class Evaluation {
     private String workflowId;
     private String stageId;
     private String stageName;
-    private BigDecimal stageMaxPoint;
+    private double stageMaxPoint;
     private String committeeId;
     private String evaluatorId;
     private EvaluationStatus status;
@@ -25,7 +25,7 @@ public class Evaluation {
             String workflowId,
             String stageId,
             String stageName,
-            BigDecimal stageMaxPoint,
+            double stageMaxPoint,
             String committeeId,
             String evaluatorId,
             EvaluationStatus status
