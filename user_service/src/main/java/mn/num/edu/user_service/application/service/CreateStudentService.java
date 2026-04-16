@@ -14,6 +14,7 @@ import mn.num.edu.user_service.domain.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -26,16 +27,19 @@ public class CreateStudentService implements CreateStudentUseCase {
     private final UserRepositoryPort userRepositoryPort;
     private final StudentRepositoryPort studentProfileRepositoryPort;
     private final UserEventPublisherPort eventPublisherPort;
+    private final PasswordEncoder passwordEncoder;
 
     public CreateStudentService(
             UserRepositoryPort userRepositoryPort,
             StudentRepositoryPort studentProfileRepositoryPort,
 
             @Qualifier("kafkaUserEventPublisherAdapter")
-            UserEventPublisherPort eventPublisherPort    ) {
+            UserEventPublisherPort eventPublisherPort,
+            PasswordEncoder passwordEncoder) {
         this.userRepositoryPort = userRepositoryPort;
         this.studentProfileRepositoryPort = studentProfileRepositoryPort;
         this.eventPublisherPort = eventPublisherPort;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -48,7 +52,8 @@ public class CreateStudentService implements CreateStudentUseCase {
                 command.lastName(),
                 command.email(),
                 SystemRole.STUDENT,
-                command.departmentId()
+                command.departmentId(),
+                passwordEncoder.encode(command.password())
         );
 
         return userRepositoryPort.save(user)

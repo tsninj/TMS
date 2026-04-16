@@ -8,6 +8,7 @@ import mn.num.edu.user_service.application.port.out.UserRepositoryPort;
 import mn.num.edu.user_service.domain.event.UserCreatedEvent;
 import mn.num.edu.user_service.domain.model.User;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -16,13 +17,16 @@ public class CreateUserService implements CreateUserUseCase {
 
     private final UserRepositoryPort userRepositoryPort;
     private final UserEventPublisherPort userEventPublisherPort;
+    private final PasswordEncoder passwordEncoder;
 
     public CreateUserService(
             UserRepositoryPort userRepositoryPort,
-            @Qualifier("kafkaUserEventPublisherAdapter") UserEventPublisherPort userEventPublisherPort
+            @Qualifier("kafkaUserEventPublisherAdapter") UserEventPublisherPort userEventPublisherPort,
+            PasswordEncoder passwordEncoder
     ) {
         this.userRepositoryPort = userRepositoryPort;
         this.userEventPublisherPort = userEventPublisherPort;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -32,7 +36,8 @@ public class CreateUserService implements CreateUserUseCase {
                 command.lastName(),
                 command.email(),
                 command.systemRole(),
-                command.departmentId()
+                command.departmentId(),
+                passwordEncoder.encode(command.password())
         );
 
         return userRepositoryPort.save(user)

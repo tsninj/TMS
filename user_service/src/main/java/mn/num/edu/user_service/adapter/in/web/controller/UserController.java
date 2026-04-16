@@ -67,6 +67,7 @@ public class UserController {
                 request.firstName(),
                 request.lastName(),
                 request.email(),
+                request.password(),
                 request.studentId(),
                 request.departmentId(),
                 request.major()
@@ -94,6 +95,7 @@ public class UserController {
                 request.firstName(),
                 request.lastName(),
                 request.email(),
+                request.password(),
                 request.departmentId(),
                 request.position()
         );
@@ -119,6 +121,7 @@ public class UserController {
                 request.firstName(),
                 request.lastName(),
                 request.email(),
+                request.password(),
                 request.departmentId(),
                 request.departmentName()
         );

@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
     department_id VARCHAR(255),
     system_role VARCHAR(50) NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,

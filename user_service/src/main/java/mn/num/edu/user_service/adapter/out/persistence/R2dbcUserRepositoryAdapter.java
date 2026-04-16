@@ -22,6 +22,11 @@ public class R2dbcUserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public Mono<User> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
     public Flux<User> findAll() {
         return repository.findAll();
     }

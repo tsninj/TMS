@@ -1,5 +1,6 @@
 package mn.num.edu.user_service.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -31,6 +32,10 @@ public class User implements Persistable<String> {
     @Column("system_role")
     private SystemRole systemRole;
 
+    @JsonIgnore
+    @Column("password_hash")
+    private String passwordHash;
+
     private boolean active;
 
     @Column("created_at")
@@ -40,6 +45,10 @@ public class User implements Persistable<String> {
     private boolean isNew;
 
     public static User create(String firstName, String lastName, String email, SystemRole systemRole, String departmentId) {
+        return create(firstName, lastName, email, systemRole, departmentId, null);
+    }
+
+    public static User create(String firstName, String lastName, String email, SystemRole systemRole, String departmentId, String passwordHash) {
         return new User(
                 UUID.randomUUID().toString(),
                 firstName,
@@ -47,6 +56,7 @@ public class User implements Persistable<String> {
                 email,
                 departmentId,
                 systemRole,
+                passwordHash,
                 true,
                 Instant.now(),
                 true
@@ -63,4 +73,3 @@ public class User implements Persistable<String> {
         return isNew;
     }
 }
-

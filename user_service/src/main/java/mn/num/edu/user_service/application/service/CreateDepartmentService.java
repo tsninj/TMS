@@ -16,6 +16,7 @@ import mn.num.edu.user_service.domain.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -28,16 +29,19 @@ public class CreateDepartmentService implements CreateDepartmentUseCase {
     private final UserRepositoryPort userRepositoryPort;
     private final DepartmentRepositoryPort departmentProfileRepositoryPort;
     private final UserEventPublisherPort eventPublisherPort;
+    private final PasswordEncoder passwordEncoder;
 
     public CreateDepartmentService(
             UserRepositoryPort userRepositoryPort,
             DepartmentRepositoryPort departmentProfileRepositoryPort,
 
             @Qualifier("kafkaUserEventPublisherAdapter")
-            UserEventPublisherPort eventPublisherPort    ) {
+            UserEventPublisherPort eventPublisherPort,
+            PasswordEncoder passwordEncoder) {
         this.userRepositoryPort = userRepositoryPort;
         this.departmentProfileRepositoryPort = departmentProfileRepositoryPort;
         this.eventPublisherPort = eventPublisherPort;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -50,7 +54,8 @@ public class CreateDepartmentService implements CreateDepartmentUseCase {
                 command.lastName(),
                 command.email(),
                 SystemRole.DEPARTMENT,
-                command.departmentName()
+                command.departmentName(),
+                passwordEncoder.encode(command.password())
         );
 
         return userRepositoryPort.save(user)
