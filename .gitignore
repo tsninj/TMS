@@ -1,0 +1,39 @@
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === IDE ===
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# === Maven / Java ===
+target/
+*.class
+*.jar
+*.war
+*.ear
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# === Spring Boot ===
+HELP.md
+.mvn/wrapper/maven-wrapper.jar
+
+# === Logs ===
+*.log
+
+# === Misc ===
+*.swp
+*.swo
+*~
+
+# === Project-specific ignores ===
+aldaachn-huhde.md
+intern-report/
