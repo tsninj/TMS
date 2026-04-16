@@ -1,11 +1,13 @@
 package mn.num.edu.evaluation_service.domain.event;
 
-import java.math.BigDecimal;
+import java.time.Instant;
 
 public record EvaluationSubmittedEvent(
         String evaluationId,
         String thesisId,
         String stageId,
+        String committeeId,
         String evaluatorId,
-        BigDecimal totalScore
-) {}
+        double totalScore,
+        Instant submittedAt
+) {}

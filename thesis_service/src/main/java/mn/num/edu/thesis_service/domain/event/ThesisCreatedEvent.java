@@ -11,6 +11,7 @@ public record ThesisCreatedEvent(
         String titleEn,
         String status,
         String supervisorId,
+        String committeeId,
         LocalDateTime occurredAt
 ) {
 }

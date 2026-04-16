@@ -13,5 +13,17 @@ CREATE TABLE workflow_stages (
                                  end_date DATE NOT NULL,
                                  weight_percent NUMERIC(5,2) NOT NULL,
                                  status VARCHAR(50) NOT NULL,
-    stage INT NOT NULL
+                                 stage_order INT NOT NULL
+);
+CREATE TABLE stage_criteria (
+                                id VARCHAR(100) PRIMARY KEY,
+                                stage_id VARCHAR(100) NOT NULL REFERENCES workflow_stages(id) ON DELETE CASCADE,
+                                name VARCHAR(255) NOT NULL,
+                                max_score NUMERIC(5,2) NOT NULL,
+                                description TEXT
+);
+CREATE TABLE workflow_stage_evaluator_roles (
+                                                id VARCHAR(100) PRIMARY KEY,
+                                                stage_id VARCHAR(100) NOT NULL REFERENCES workflow_stages(id) ON DELETE CASCADE,
+                                                evaluator_role VARCHAR(50) NOT NULL
 );

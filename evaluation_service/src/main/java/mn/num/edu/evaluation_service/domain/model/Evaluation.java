@@ -1,65 +1,44 @@
 package mn.num.edu.evaluation_service.domain.model;
 
-import lombok.Getter;
 
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 public class Evaluation {
-    private String id;
+    private String evaluationId;
     private String thesisId;
-    private String workflowId;
     private String stageId;
-    private String stageName;
-    private double stageMaxPoint;
     private String committeeId;
     private String evaluatorId;
+    @Setter
+    private EvaluatorRole evaluatorRole;
+    private List<CriterionAssessment> assessments = new ArrayList<>();
+    private double totalScore;
     private EvaluationStatus status;
-    private final List<CriterionAssessment> criteria = new ArrayList<>();
+    private Instant submittedAt;
 
-    public Evaluation(
-            String id,
-            String thesisId,
-            String workflowId,
-            String stageId,
-            String stageName,
-            double stageMaxPoint,
-            String committeeId,
-            String evaluatorId,
-            EvaluationStatus status
-    ) {
-        this.id = id;
+    public Evaluation() {}
+
+    public Evaluation(String evaluationId, String thesisId, String stageId, String committeeId,
+                      String evaluatorId, EvaluatorRole evaluatorRole,
+                      List<CriterionAssessment> assessments, double totalScore,
+                      EvaluationStatus status, Instant submittedAt) {
+        this.evaluationId = evaluationId;
         this.thesisId = thesisId;
-        this.workflowId = workflowId;
         this.stageId = stageId;
-        this.stageName = stageName;
-        this.stageMaxPoint = stageMaxPoint;
         this.committeeId = committeeId;
         this.evaluatorId = evaluatorId;
+        this.evaluatorRole = evaluatorRole;
+        this.assessments = assessments;
+        this.totalScore = totalScore;
         this.status = status;
+        this.submittedAt = submittedAt;
     }
 
-    public void addCriterion(CriterionAssessment assessment) {
-        this.criteria.add(assessment);
-    }
-
-    public void submit() {
-        if (criteria.isEmpty()) {
-            throw new IllegalStateException("Evaluation must contain at least one criterion");
-        }
-        this.status = EvaluationStatus.SUBMITTED;
-    }
-
-    public void complete() {
-        this.status = EvaluationStatus.COMPLETED;
-    }
-
-    public BigDecimal totalWeightedScore() {
-        return criteria.stream()
-                .map(CriterionAssessment::getWeightedScore)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-}
+}

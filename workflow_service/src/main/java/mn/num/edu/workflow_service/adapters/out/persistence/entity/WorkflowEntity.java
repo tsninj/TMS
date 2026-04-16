@@ -1,18 +1,23 @@
 package mn.num.edu.workflow_service.adapters.out.persistence.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import mn.num.edu.workflow_service.domain.model.WorkflowStage;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
-
+@Getter
+@Setter
 @Table("workflows")
 public class WorkflowEntity implements Persistable<String> {
 
     @Id
     private String id;
+    @Getter
     private String departmentId;
     private String title;
+    @Setter
     private String status;
 
     @Transient
@@ -30,34 +35,6 @@ public class WorkflowEntity implements Persistable<String> {
 
     public void markNotNew() {
         this.isNew = false;
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
 }

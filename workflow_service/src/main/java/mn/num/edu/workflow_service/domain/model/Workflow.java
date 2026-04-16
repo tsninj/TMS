@@ -61,7 +61,7 @@ public class Workflow {
         double total = stages.stream()
                 .mapToDouble(WorkflowStage::getWeightPercent)
                 .sum();
-
+        activate();
         if (total>100.0) {
             throw new WorkflowValidationException("Нийт stage-ийн хувь 100 байх ёстой. Одоогийн нийлбэр=" + total);
         }

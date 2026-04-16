@@ -4,8 +4,7 @@ import  mn.num.edu.evaluation_service.application.port.in.SubmitEvaluationUseCas
 import  mn.num.edu.evaluation_service.application.port.in.UpdateEvaluationUseCase;
 import mn.num.edu.evaluation_service.application.port.out.EvaluationEventPublisherPort;
 import mn.num.edu.evaluation_service.application.port.out.EvaluationRepositoryPort;
-import mn.num.edu.evaluation_service.application.service.EvaluationCommandService;
-import mn.num.edu.evaluation_service.application.service.WorkflowStageActivationHandler;
+import mn.num.edu.evaluation_service.application.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,27 +12,17 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfig {
 
     @Bean
-    public EvaluationCommandService evaluationCommandService(
-            EvaluationRepositoryPort repositoryPort,
-            EvaluationEventPublisherPort publisherPort
-    ) {
-        return new EvaluationCommandService(repositoryPort, publisherPort);
+    public ScoreCalculator scoreCalculator() {
+        return new ScoreCalculator();
     }
 
     @Bean
-    public SubmitEvaluationUseCase submitEvaluationUseCase(EvaluationCommandService service) {
-        return service;
+    public EvaluationEligibilityChecker evaluationEligibilityChecker() {
+        return new EvaluationEligibilityChecker();
     }
 
     @Bean
-    public UpdateEvaluationUseCase updateEvaluationUseCase(EvaluationCommandService service) {
-        return service;
-    }
-
-    @Bean
-    public WorkflowStageActivationHandler workflowStageActivationHandler(
-            EvaluationRepositoryPort repositoryPort
-    ) {
-        return new WorkflowStageActivationHandler(repositoryPort);
+    public EvaluationSlotFactory evaluationSlotFactory() {
+        return new EvaluationSlotFactory();
     }
 }

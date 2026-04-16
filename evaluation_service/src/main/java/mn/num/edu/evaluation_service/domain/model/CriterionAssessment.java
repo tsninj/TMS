@@ -1,48 +1,44 @@
 package mn.num.edu.evaluation_service.domain.model;
 
 import lombok.Getter;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class CriterionAssessment {
     private String criterionId;
     private String criterionName;
-    private BigDecimal maxPoint;
-    private Integer achievedPercent; // 0..100
-    private BigDecimal weightedScore;
+    private double maxScore;
+    private double givenScore;
+    private double weight;
+    private double weightedScore;
+    private String comment;
 
-    public CriterionAssessment(
-            String criterionId,
-            String criterionName,
-            BigDecimal maxPoint,
-            Integer achievedPercent
-    ) {
-        validatePercent(achievedPercent);
+    public CriterionAssessment() {}
+
+    public CriterionAssessment(String criterionId, String criterionName, double maxScore,
+                               double givenScore, double weight, double weightedScore,
+                               String comment) {
         this.criterionId = criterionId;
         this.criterionName = criterionName;
-        this.maxPoint = maxPoint;
-        this.achievedPercent = achievedPercent;
-        this.weightedScore = calculateWeightedScore(maxPoint, achievedPercent);
+        this.maxScore = maxScore;
+        this.givenScore = givenScore;
+        this.weight = weight;
+        this.weightedScore = weightedScore;
+        this.comment = comment;
     }
 
-    private void validatePercent(Integer percent) {
-        if (percent == null || percent < 0 || percent > 100) {
-            throw new IllegalArgumentException("achievedPercent must be between 0 and 100");
-        }
-    }
+    public void setCriterionId(String criterionId) { this.criterionId = criterionId; }
 
-    private BigDecimal calculateWeightedScore(BigDecimal maxPoint, Integer percent) {
-        return maxPoint
-                .multiply(BigDecimal.valueOf(percent))
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-    }
+    public void setCriterionName(String criterionName) { this.criterionName = criterionName; }
 
-    public void updatePercent(Integer newPercent) {
-        validatePercent(newPercent);
-        this.achievedPercent = newPercent;
-        this.weightedScore = calculateWeightedScore(this.maxPoint, newPercent);
-    }
+    public void setMaxScore(double maxScore) { this.maxScore = maxScore; }
 
-}
+    public void setGivenScore(double givenScore) { this.givenScore = givenScore; }
+
+    public void setWeight(double weight) { this.weight = weight; }
+
+    public void setWeightedScore(double weightedScore) { this.weightedScore = weightedScore; }
+
+    public void setComment(String comment) { this.comment = comment; }
+}

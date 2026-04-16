@@ -1,5 +1,6 @@
 package mn.num.edu.evaluation_service.adapters.out.kafka;
 
+import mn.num.edu.evaluation_service.domain.event.DefenseEvaluatedEvent;
 import mn.num.edu.evaluation_service.domain.event.EvaluationCompletedEvent;
 import mn.num.edu.evaluation_service.domain.event.EvaluationSubmittedEvent;
 import mn.num.edu.evaluation_service.domain.event.EvaluationUpdatedEvent;
@@ -19,16 +20,30 @@ public class EvaluationKafkaProducer implements EvaluationEventPublisherPort {
 
     @Override
     public Mono<Void> publishSubmitted(EvaluationSubmittedEvent event) {
-        return Mono.fromFuture(kafkaTemplate.send("evaluation.submitted", event.evaluationId().toString(), event)).then();
+        return Mono.fromRunnable(() ->
+                kafkaTemplate.send("evaluation.submitted", event.thesisId(), event)
+        );
     }
 
     @Override
     public Mono<Void> publishUpdated(EvaluationUpdatedEvent event) {
-        return Mono.fromFuture(kafkaTemplate.send("evaluation.updated", event.evaluationId().toString(), event)).then();
+        return Mono.fromRunnable(() ->
+                kafkaTemplate.send("evaluation.updated", event.thesisId(), event)
+        );
     }
 
     @Override
     public Mono<Void> publishCompleted(EvaluationCompletedEvent event) {
-        return Mono.fromFuture(kafkaTemplate.send("evaluation.completed", event.evaluationId().toString(), event)).then();
+        return Mono.fromRunnable(() ->
+                kafkaTemplate.send("evaluation.completed", event.thesisId(), event)
+        );
+    }
+
+    @Override
+    public Mono<Void> publishDefenseEvaluated(DefenseEvaluatedEvent event) {
+        return Mono.fromRunnable(() ->
+                kafkaTemplate.send("defense.evaluated", event.thesisId(), event)
+
+        );
     }
 }

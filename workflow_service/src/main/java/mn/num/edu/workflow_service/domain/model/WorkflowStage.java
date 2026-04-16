@@ -1,9 +1,11 @@
 package mn.num.edu.workflow_service.domain.model;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
-
+import java.util.*;
+@Getter
 public class WorkflowStage {
     private String id;
     private String workflowId;
@@ -11,8 +13,11 @@ public class WorkflowStage {
     private LocalDate startDate;
     private LocalDate endDate;
     private double weightPercent;
+    @Getter
     private StageStatus status;
     int stageOrder;
+    private final List<StageCriterion> criteria = new ArrayList<>();
+    private final Set<EvaluatorRole> allowedEvaluatorRoles = new HashSet<>();
 
     public WorkflowStage(
             String id,
@@ -65,13 +70,40 @@ public class WorkflowStage {
         return (date.isEqual(startDate) || date.isAfter(startDate))
                 && (date.isEqual(endDate) || date.isBefore(endDate));
     }
+    public void addCriterion(StageCriterion criterion) {
+        if (!criterion.getStageId().equals(this.id)) {
+            throw new IllegalArgumentException("Criterion-ийн stageId буруу");
+        }
+        criteria.add(criterion);
+    }
 
-    public String getId() { return id; }
-    public String getWorkflowId() { return workflowId; }
-    public String getName() { return name; }
-    public LocalDate getStartDate() { return startDate; }
-    public LocalDate getEndDate() { return endDate; }
-    public double getWeightPercent() { return weightPercent; }
-    public StageStatus getStatus() { return status; }
-    public int getStageOrder() { return stageOrder; }
+    public void addAllowedEvaluatorRole(EvaluatorRole role) {
+        if (role == null) {
+            throw new IllegalArgumentException("Evaluator role хоосон байж болохгүй");
+        }
+        allowedEvaluatorRoles.add(role);
+    }
+
+    public boolean canBeEvaluatedBy(EvaluatorRole role) {
+        return allowedEvaluatorRoles.contains(role);
+    }
+
+    public void validateCriteriaTotal() {
+        double total = criteria.stream()
+                .mapToDouble(StageCriterion::getMaxScore)
+                .sum();
+
+        if (Math.abs(total - this.weightPercent) > 0.0001) {
+            throw new IllegalArgumentException(
+                    "Criterion нийлбэр stage maxScore-тэй тэнцүү байх ёстой"
+            );
+        }
+    }
+
+    public void validateEvaluatorRoles() {
+        if (allowedEvaluatorRoles.isEmpty()) {
+            throw new IllegalArgumentException("Stage дээр дор хаяж 1 evaluator role байх ёстой");
+        }
+    }
+
 }

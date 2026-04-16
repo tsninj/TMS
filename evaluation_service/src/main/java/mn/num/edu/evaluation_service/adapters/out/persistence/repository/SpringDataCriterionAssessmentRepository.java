@@ -4,9 +4,7 @@ import mn.num.edu.evaluation_service.adapters.out.persistence.entity.CriterionAs
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
-import java.util.UUID;
-
 public interface SpringDataCriterionAssessmentRepository extends ReactiveCrudRepository<CriterionAssessmentEntity, String> {
     Flux<CriterionAssessmentEntity> findByEvaluationId(String evaluationId);
-    reactor.core.publisher.Mono<Void> deleteByEvaluationId(String evaluationId);
-}
+    Flux<CriterionAssessmentEntity>  deleteByEvaluationId(String evaluationId);
+}

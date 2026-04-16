@@ -1,16 +1,28 @@
 package mn.num.edu.evaluation_service.application.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import mn.num.edu.evaluation_service.domain.model.CriterionAssessment;
+
+import java.util.List;
 
 public class ScoreCalculator {
 
-    public BigDecimal weightedScore(BigDecimal maxPoint, int percent) {
-        if (percent < 0 || percent > 100) {
-            throw new IllegalArgumentException("Percent must be between 0 and 100");
+    public double calculateTotalScore(List<CriterionAssessment> assessments) {
+        double total = assessments.stream()
+                .mapToDouble(CriterionAssessment::getWeightedScore)
+                .sum();
+        return round(total);
+    }
+
+    public double calculateWeighted(double givenScore, double maxScore, double weight) {
+        if (maxScore == 0) {
+            return 0.0;
         }
-        return maxPoint
-                .multiply(BigDecimal.valueOf(percent))
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        double weighted = (givenScore * weight) / maxScore;
+        return round(weighted);
+    }
+
+    private double round(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 }
+

@@ -1,5 +1,6 @@
 package mn.num.edu.evaluation_service.application.port.out;
 
+import mn.num.edu.evaluation_service.domain.event.DefenseEvaluatedEvent;
 import mn.num.edu.evaluation_service.domain.event.EvaluationCompletedEvent;
 import mn.num.edu.evaluation_service.domain.event.EvaluationSubmittedEvent;
 import mn.num.edu.evaluation_service.domain.event.EvaluationUpdatedEvent;
@@ -9,4 +10,5 @@ public interface EvaluationEventPublisherPort {
     Mono<Void> publishSubmitted(EvaluationSubmittedEvent event);
     Mono<Void> publishUpdated(EvaluationUpdatedEvent event);
     Mono<Void> publishCompleted(EvaluationCompletedEvent event);
+    Mono<Void> publishDefenseEvaluated(DefenseEvaluatedEvent event);
 }

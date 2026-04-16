@@ -46,7 +46,7 @@ public class WorkflowPersistenceAdapter implements WorkflowRepositoryPort, Workf
 
     @Override
     public Mono<Workflow> findById(String workflowId) {
-        return null;
+        return workflowRepository.findById(workflowId).map(this::toDomain);
     }
 
 

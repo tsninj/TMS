@@ -1,9 +1,13 @@
 package mn.num.edu.workflow_service.config;
 
 import mn.num.edu.workflow_service.adapters.out.kafka.WorkflowKafkaProducer;
+import mn.num.edu.workflow_service.adapters.out.persistence.adapter.CriterionPersistenceAdapter;
+import mn.num.edu.workflow_service.adapters.out.persistence.adapter.EvaluatorRolePersistenceAdapter;
+import mn.num.edu.workflow_service.adapters.out.persistence.adapter.WorkflowPersistenceAdapter;
+import mn.num.edu.workflow_service.adapters.out.persistence.repository.SpringDataStageCriterionRepository;
+import mn.num.edu.workflow_service.adapters.out.persistence.repository.SpringDataStageEvaluatorRoleRepository;
 import mn.num.edu.workflow_service.adapters.out.persistence.repository.SpringDataWorkflowRepository;
 import mn.num.edu.workflow_service.adapters.out.persistence.repository.SpringDataWorkflowStageRepository;
-import mn.num.edu.workflow_service.adapters.out.persistence.adapter.WorkflowPersistenceAdapter;
 import mn.num.edu.workflow_service.application.service.WorkflowApplicationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,14 +30,32 @@ public class BeanConfig {
     }
 
     @Bean
+    public CriterionPersistenceAdapter criterionPersistenceAdapter(
+            SpringDataStageCriterionRepository repository
+    ) {
+        return new CriterionPersistenceAdapter(repository);
+    }
+
+    @Bean
+    public EvaluatorRolePersistenceAdapter evaluatorRolePersistenceAdapter(
+            SpringDataStageEvaluatorRoleRepository repository
+    ) {
+        return new EvaluatorRolePersistenceAdapter(repository);
+    }
+
+    @Bean
     public WorkflowApplicationService workflowApplicationService(
-            WorkflowPersistenceAdapter persistenceAdapter,
-            WorkflowKafkaProducer producer
+            WorkflowPersistenceAdapter workflowPersistenceAdapter,
+            WorkflowKafkaProducer workflowKafkaProducer,
+            CriterionPersistenceAdapter criterionPersistenceAdapter,
+            EvaluatorRolePersistenceAdapter evaluatorRolePersistenceAdapter
     ) {
         return new WorkflowApplicationService(
-                persistenceAdapter,
-                persistenceAdapter,
-                producer
+                workflowPersistenceAdapter,
+                workflowPersistenceAdapter,
+                workflowKafkaProducer,
+                criterionPersistenceAdapter,
+                evaluatorRolePersistenceAdapter
         );
     }
 }

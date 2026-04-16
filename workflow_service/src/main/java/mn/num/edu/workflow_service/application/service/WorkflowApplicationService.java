@@ -1,22 +1,34 @@
 package mn.num.edu.workflow_service.application.service;
 
+import mn.num.edu.workflow_service.application.dto.CreateStageCriterionCommand;
 import mn.num.edu.workflow_service.application.dto.CreateWorkflowCommand;
 import mn.num.edu.workflow_service.application.dto.CreateWorkflowStageCommand;
 import mn.num.edu.workflow_service.application.dto.WorkflowResponse;
-import mn.num.edu.workflow_service.application.port.in.AddWorkflowStageUseCase;
 import mn.num.edu.workflow_service.application.port.in.ActivateStageUseCase;
+import mn.num.edu.workflow_service.application.port.in.AddWorkflowStageUseCase;
 import mn.num.edu.workflow_service.application.port.in.CloseStageUseCase;
 import mn.num.edu.workflow_service.application.port.in.CreateWorkflowUseCase;
+import mn.num.edu.workflow_service.application.port.out.CriterianRepositoryPort;
+import mn.num.edu.workflow_service.application.port.out.EvaluatorRoleRepositoryPort;
 import mn.num.edu.workflow_service.application.port.out.WorkflowEventPublisherPort;
 import mn.num.edu.workflow_service.application.port.out.WorkflowRepositoryPort;
 import mn.num.edu.workflow_service.application.port.out.WorkflowStageRepositoryPort;
-import mn.num.edu.workflow_service.domain.event.*;
+import mn.num.edu.workflow_service.domain.event.WorkflowCompletedEvent;
+import mn.num.edu.workflow_service.domain.event.WorkflowCreatedEvent;
+import mn.num.edu.workflow_service.domain.event.WorkflowStageActivatedEvent;
+import mn.num.edu.workflow_service.domain.event.WorkflowStageClosedEvent;
 import mn.num.edu.workflow_service.domain.exception.WorkflowNotFoundException;
-import mn.num.edu.workflow_service.domain.model.*;
-
+import mn.num.edu.workflow_service.domain.model.EvaluatorRole;
+import mn.num.edu.workflow_service.domain.model.StageCriterion;
+import mn.num.edu.workflow_service.domain.model.StageStatus;
+import mn.num.edu.workflow_service.domain.model.Workflow;
+import mn.num.edu.workflow_service.domain.model.WorkflowStage;
+import mn.num.edu.workflow_service.domain.model.WorkflowStatus;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,20 +36,27 @@ public class WorkflowApplicationService implements
         CreateWorkflowUseCase,
         AddWorkflowStageUseCase,
         ActivateStageUseCase,
-        CloseStageUseCase {
+        CloseStageUseCase
+         {
 
     private final WorkflowRepositoryPort workflowRepositoryPort;
     private final WorkflowStageRepositoryPort stageRepositoryPort;
     private final WorkflowEventPublisherPort eventPublisherPort;
+    private final CriterianRepositoryPort criterianRepositoryPort;
+    private final EvaluatorRoleRepositoryPort evaluatorRoleRepositoryPort;
 
     public WorkflowApplicationService(
             WorkflowRepositoryPort workflowRepositoryPort,
             WorkflowStageRepositoryPort stageRepositoryPort,
-            WorkflowEventPublisherPort eventPublisherPort
+            WorkflowEventPublisherPort eventPublisherPort,
+            CriterianRepositoryPort criterianRepositoryPort,
+            EvaluatorRoleRepositoryPort evaluatorRoleRepositoryPort
     ) {
         this.workflowRepositoryPort = workflowRepositoryPort;
         this.stageRepositoryPort = stageRepositoryPort;
         this.eventPublisherPort = eventPublisherPort;
+        this.criterianRepositoryPort = criterianRepositoryPort;
+        this.evaluatorRoleRepositoryPort = evaluatorRoleRepositoryPort;
     }
 
     @Override
@@ -63,43 +82,54 @@ public class WorkflowApplicationService implements
 
     @Override
     public Mono<WorkflowResponse> addStage(String workflowId, CreateWorkflowStageCommand command) {
-        return workflowRepositoryPort.findWorkflowById(workflowId)
+        return workflowRepositoryPort.findById(workflowId)
                 .switchIfEmpty(Mono.error(new WorkflowNotFoundException("Workflow олдсонгүй")))
-                .flatMap(workflow ->
-                        stageRepositoryPort.findByWorkflowId(workflowId)
-                                .collectList()
-                                .flatMap(existingStages -> {
-                                    existingStages.forEach(workflow::addStage);
+                .flatMap(workflow -> stageRepositoryPort.findByWorkflowId(workflowId)
+                        .collectList()
+                        .flatMap(existingStages -> {
+                            existingStages.forEach(workflow::addStage);
 
-                                    WorkflowStage newStage = new WorkflowStage(
+                            WorkflowStage stage = new WorkflowStage(
+                                    UUID.randomUUID().toString(),
+                                    workflowId,
+                                    command.name(),
+                                    command.startDate(),
+                                    command.endDate(),
+                                    command.weightPercent(),
+                                    StageStatus.PLANNED,
+                                    command.stageOrder()
+                            );
+
+                            if (command.criteria() != null) {
+                                for (CreateStageCriterionCommand c : command.criteria()) {
+                                    StageCriterion criterion = new StageCriterion(
                                             UUID.randomUUID().toString(),
-                                            workflowId,
-                                            command.name(),
-                                            command.startDate(),
-                                            command.endDate(),
-                                            command.weightPercent(),
-                                            StageStatus.PLANNED,
-                                            command.stageOrder()
+                                            stage.getId(),
+                                            c.name(),
+                                            c.maxScore(),
+                                            c.description()
                                     );
+                                    stage.addCriterion(criterion);
+                                }
+                            }
 
-                                    workflow.addStage(newStage);
+                            if (command.allowedEvaluatorRoles() != null) {
+                                for (String roleName : command.allowedEvaluatorRoles()) {
+                                    stage.addAllowedEvaluatorRole(EvaluatorRole.valueOf(roleName));
+                                }
+                            }
 
-                                    return stageRepositoryPort.saveStage(newStage)
-                                            .thenReturn(workflow)
-                                            .doOnSuccess(wf -> eventPublisherPort.publishWorkflowStageCreated(
-                                                    new WorkflowStageCreatedEvent(
-                                                            wf.getId(),
-                                                            newStage.getId(),
-                                                            newStage.getName(),
-                                                            newStage.getStartDate(),
-                                                            newStage.getEndDate(),
-                                                            newStage.getWeightPercent(),
-                                                            Instant.now()
-                                                    )
-                                            ));
-                                })
-                )
-                .flatMap(this::loadResponse);
+                            stage.validateCriteriaTotal();
+                            stage.validateEvaluatorRoles();
+
+                            workflow.addStage(stage);
+                            workflow.validateTotalWeight();
+
+                            return stageRepositoryPort.saveStage(stage)
+                                    .thenMany(criterianRepositoryPort.saveAll(stage.getCriteria()))
+                                    .thenMany(evaluatorRoleRepositoryPort.saveRoles(stage.getId(), stage.getAllowedEvaluatorRoles()))
+                                    .then(loadResponse(workflow));
+                        }));
     }
 
     @Override
@@ -109,7 +139,8 @@ public class WorkflowApplicationService implements
                 .flatMap(stage -> {
                     stage.activate();
                     return stageRepositoryPort.updateStageStatus(stageId, stage.getStatus().name())
-                            .then(workflowRepositoryPort.findWorkflowById(workflowId))
+                            .then(workflowRepositoryPort.findById(workflowId))
+                            .switchIfEmpty(Mono.error(new WorkflowNotFoundException("Workflow олдсонгүй")))
                             .doOnSuccess(workflow -> eventPublisherPort.publishWorkflowStageActivated(
                                     new WorkflowStageActivatedEvent(
                                             workflowId,
@@ -129,7 +160,8 @@ public class WorkflowApplicationService implements
                 .flatMap(stage -> {
                     stage.close();
                     return stageRepositoryPort.updateStageStatus(stageId, stage.getStatus().name())
-                            .then(workflowRepositoryPort.findWorkflowById(workflowId))
+                            .then(workflowRepositoryPort.findById(workflowId))
+                            .switchIfEmpty(Mono.error(new WorkflowNotFoundException("Workflow олдсонгүй")))
                             .doOnSuccess(workflow -> eventPublisherPort.publishWorkflowStageClosed(
                                     new WorkflowStageClosedEvent(
                                             workflowId,
@@ -140,7 +172,7 @@ public class WorkflowApplicationService implements
                             ));
                 })
                 .flatMap(workflow ->
-                        stageRepositoryPort.findByWorkflowId(workflowId)
+                        stageRepositoryPort.findByWorkflowId(workflow.getId())
                                 .collectList()
                                 .flatMap(stages -> {
                                     boolean allClosed = stages.stream()
@@ -165,22 +197,44 @@ public class WorkflowApplicationService implements
 
     private Mono<WorkflowResponse> loadResponse(Workflow workflow) {
         return stageRepositoryPort.findByWorkflowId(workflow.getId())
+                .sort(Comparator.comparingInt(WorkflowStage::getStageOrder))
+                .flatMap(this::toStageItem)
                 .collectList()
-                .map(stages -> new WorkflowResponse(
+                .map(stageItems -> new WorkflowResponse(
                         workflow.getId(),
                         workflow.getDepartmentId(),
                         workflow.getTitle(),
                         workflow.getStatus().name(),
-                        stages.stream()
-                                .map(s -> new WorkflowResponse.StageItem(
-                                        s.getId(),
-                                        s.getName(),
-                                        s.getStartDate(),
-                                        s.getEndDate(),
-                                        s.getWeightPercent(),
-                                        s.getStatus().name()
-                                ))
-                                .toList()
+                        stageItems
+                ));
+    }
+
+    private Mono<WorkflowResponse.StageItem> toStageItem(WorkflowStage stage) {
+        Mono<List<WorkflowResponse.CriterionItem>> criteriaMono =
+                criterianRepositoryPort.findByStageId(stage.getId())
+                        .map(criterion -> new WorkflowResponse.CriterionItem(
+                                criterion.getId(),
+                                criterion.getName(),
+                                criterion.getMaxScore(),
+                                criterion.getDescription()
+                        ))
+                        .collectList();
+
+        Mono<List<String>> rolesMono =
+                evaluatorRoleRepositoryPort.findRolesByStageId(stage.getId())
+                        .map(Enum::name)
+                        .collectList();
+
+        return Mono.zip(criteriaMono, rolesMono)
+                .map(tuple -> new WorkflowResponse.StageItem(
+                        stage.getId(),
+                        stage.getName(),
+                        stage.getStartDate(),
+                        stage.getEndDate(),
+                        stage.getWeightPercent(),
+                        stage.getStatus().name(),
+                        tuple.getT2(),
+                        tuple.getT1()
                 ));
     }
 

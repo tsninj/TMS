@@ -53,6 +53,7 @@ public class ThesisApplicationService implements
                                 saved.getSupervisorId(),
                                 saved.getTitleEn(),
                                 saved.getStatus().name(),
+                                saved.getCommitteeId(),
                                 LocalDateTime.now()
                         )
                 ).thenReturn(saved))

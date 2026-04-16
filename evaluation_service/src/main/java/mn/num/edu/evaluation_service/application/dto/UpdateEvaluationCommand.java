@@ -1,14 +1,21 @@
 package mn.num.edu.evaluation_service.application.dto;
 
-import java.util.List;
-import java.util.UUID;
+import mn.num.edu.evaluation_service.domain.model.CriterionAssessment;
+import lombok.Getter;
+import lombok.Setter;
 
-public record UpdateEvaluationCommand(
-        String evaluationId,
-        List<CriterionInput> criteria
-) {
-    public record CriterionInput(
-            String criterionId,
-            Integer achievedPercent
-    ) {}
-}
+import java.util.List;
+
+@Getter
+@Setter
+public class UpdateEvaluationCommand {
+    private String evaluationId;
+    private List<CriterionAssessment> assessments;
+
+    public UpdateEvaluationCommand() {}
+
+    public UpdateEvaluationCommand(String evaluationId, List<CriterionAssessment> assessments) {
+        this.evaluationId = evaluationId;
+        this.assessments = assessments;
+    }
+}

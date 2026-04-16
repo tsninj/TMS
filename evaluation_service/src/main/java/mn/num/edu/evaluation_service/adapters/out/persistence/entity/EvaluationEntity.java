@@ -1,60 +1,28 @@
 package mn.num.edu.evaluation_service.adapters.out.persistence.entity;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigDecimal;
+import java.time.Instant;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table("evaluations")
-public class EvaluationEntity implements Persistable<String> {
+public class EvaluationEntity {
 
     @Id
-    private String id;
+    private String evaluationId;
+
     private String thesisId;
-    private String workflowId;
     private String stageId;
-    private String stageName;
-    private double stageMaxPoint;
     private String committeeId;
     private String evaluatorId;
+    private String evaluatorRole;
+    private double totalScore;
     private String status;
-    @Transient
-    private boolean isNew = true;
-    public EvaluationEntity() {}
-
-    public EvaluationEntity(
-            String id,
-            String thesisId,
-            String workflowId,
-            String stageId,
-            String stageName,
-            double stageMaxPoint,
-            String committeeId,
-            String evaluatorId,
-            String status
-    ) {
-        this.id = id;
-        this.thesisId = thesisId;
-        this.workflowId = workflowId;
-        this.stageId = stageId;
-        this.stageName = stageName;
-        this.stageMaxPoint = stageMaxPoint;
-        this.committeeId = committeeId;
-        this.evaluatorId = evaluatorId;
-        this.status = status;
-    }
-    @Override
-    public boolean isNew() {
-        return isNew;
-    }
-    public void markNotNew() {
-        this.isNew = false;
-    }
-
-
-
-}
+    private Instant submittedAt;
+}

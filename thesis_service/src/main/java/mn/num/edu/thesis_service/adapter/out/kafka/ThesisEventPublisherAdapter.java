@@ -22,41 +22,41 @@ public class ThesisEventPublisherAdapter implements ThesisEventPublisherPort {
     @Override
     public Mono<Void> publishThesisCreated(ThesisCreatedEvent event) {
         return Mono.fromRunnable(() -> {
-            log.info("📤 Sending ThesisCreatedEvent: thesisId={}", event.thesisId());
-            kafkaTemplate.send("thesis-created", event.thesisId().toString(), event);
+            log.info(" Sending ThesisCreatedEvent: thesisId={}", event.thesisId());
+            kafkaTemplate.send("thesis-created", event.thesisId(), event);
         });
     }
 
     @Override
     public Mono<Void> publishThesisUpdated(ThesisUpdatedEvent event) {
         return Mono.fromRunnable(() -> {
-            log.info("📤 Sending ThesisUpdatedEvent: thesisId={}", event.thesisId());
-            kafkaTemplate.send("thesis-updated", event.thesisId().toString(), event);
+            log.info(" Sending ThesisUpdatedEvent: thesisId={}", event.thesisId());
+            kafkaTemplate.send("thesis-updated", event.thesisId(), event);
         });
     }
 
     @Override
     public Mono<Void> publishThesisApproved(ThesisApprovedEvent event) {
         return Mono.fromRunnable(() -> {
-            log.info("✅ Sending ThesisApprovedEvent: thesisId={}", event.thesisId());
-            kafkaTemplate.send("thesis-approved", event.thesisId().toString(), event);
+            log.info(" Sending ThesisApprovedEvent: thesisId={}", event.thesisId());
+            kafkaTemplate.send("thesis-approved", event.thesisId(), event);
         });
     }
 
     @Override
     public Mono<Void> publishThesisRejected(ThesisRejectedEvent event) {
         return Mono.fromRunnable(() -> {
-            log.warn("❌ Sending ThesisRejectedEvent: thesisId={}", event.thesisId());
-            kafkaTemplate.send("thesis-rejected", event.thesisId().toString(), event);
+            log.warn(" Sending ThesisRejectedEvent: thesisId={}", event.thesisId());
+            kafkaTemplate.send("thesis-rejected", event.thesisId(), event);
         });
     }
 
     @Override
     public Mono<Void> publishThesisStatusChanged(ThesisStatusChangedEvent event) {
         return Mono.fromRunnable(() -> {
-            log.info("🔄 Sending ThesisStatusChangedEvent: thesisId={}, status={}",
+            log.info(" Sending ThesisStatusChangedEvent: thesisId={}, status={}",
                     event.thesisId(), event.newStatus());
-            kafkaTemplate.send("thesis-status-changed", event.thesisId().toString(), event);
+            kafkaTemplate.send("thesis-status-changed", event.thesisId(), event);
         });
     }
 }

@@ -1,5 +1,7 @@
 package mn.num.edu.workflow_service.adapters.out.persistence.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
@@ -7,13 +9,15 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
-
+@Setter
+@Getter
 @Table("workflow_stages")
 public class WorkflowStageEntity implements Persistable<String> {
 
     @Id
     private String id;
 
+    @Setter
     @Column("workflow_id")
     private String workflowId;
 
@@ -30,6 +34,7 @@ public class WorkflowStageEntity implements Persistable<String> {
 
     private String status;
 
+    @Getter
     @Column("stage_order")
     private int stageOrder;
 
@@ -67,63 +72,5 @@ public class WorkflowStageEntity implements Persistable<String> {
         this.isNew = false;
     }
 
-    public String getWorkflowId() {
-        return workflowId;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public double getWeightPercent() {
-        return weightPercent;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public int getStageOrder() {
-        return stageOrder;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setWorkflowId(String workflowId) {
-        this.workflowId = workflowId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setWeightPercent(double weightPercent) {
-        this.weightPercent = weightPercent;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setStageOrder(int stageOrder) {
-        this.stageOrder = stageOrder;
-    }
 }
