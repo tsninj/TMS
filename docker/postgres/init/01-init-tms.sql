@@ -20,6 +20,20 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Seed ADMIN user  (password: Admin@TMS2026!)
+INSERT INTO users (id, first_name, last_name, email, password_hash, department_id, system_role, active, created_at)
+VALUES (
+    'a0000000-0000-0000-0000-000000000001',
+    'System',
+    'Admin',
+    'admin@tms.num.edu.mn',
+    '$2a$12$y/SonCwUHrlt/E0bY51gK.NCXpK2ykrnlPTNRB8dHx5GH.uHgZEk6',
+    NULL,
+    'ADMIN',
+    TRUE,
+    CURRENT_TIMESTAMP
+) ON CONFLICT (email) DO NOTHING;
+
 CREATE TABLE IF NOT EXISTS students (
     id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,

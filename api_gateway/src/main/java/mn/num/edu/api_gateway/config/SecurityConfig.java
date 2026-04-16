@@ -41,7 +41,7 @@ public class SecurityConfig {
                                 "/api/users/students",
                                 "/api/users/teachers",
                                 "/api/users/departments"
-                        ).permitAll()
+                        ).hasRole("ADMIN")
                         .pathMatchers(HttpMethod.GET, "/api/users/all").hasRole("DEPARTMENT")
                         .pathMatchers("/api/workflows/**").hasRole("DEPARTMENT")
                         .pathMatchers("/api/evaluations/**").hasAnyRole("TEACHER", "DEPARTMENT")
