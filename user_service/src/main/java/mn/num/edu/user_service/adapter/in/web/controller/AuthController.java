@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+/**
+ * Нэвтрэлтийн controller.
+ * Хэрэглэгч email/password илгээж JWT token авна.
+ * Gateway дээр /api/auth/** нээлттэй (token шаардахгүй).
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -21,6 +26,7 @@ public class AuthController {
         this.authenticateUserUseCase = authenticateUserUseCase;
     }
 
+    /** Нэвтрэх endpoint. Email + password -> JWT token буцаана. */
     @PostMapping("/login")
     public Mono<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return authenticateUserUseCase.login(new LoginCommand(request.email(), request.password()));

@@ -11,6 +11,11 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Хэрэглэгчийн домэйн модел.
+ * DB-ийн users хүснэгтэй холбогдоно.
+ * Persistable интерфэйс хэрэгжүүлснээр R2DBC insert/update ялгаа хийнэ.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -32,7 +37,7 @@ public class User implements Persistable<String> {
     @Column("system_role")
     private SystemRole systemRole;
 
-    @JsonIgnore
+    @JsonIgnore // API response-д нууц үгийн hash гарахгүй
     @Column("password_hash")
     private String passwordHash;
 
@@ -41,13 +46,15 @@ public class User implements Persistable<String> {
     @Column("created_at")
     private Instant createdAt;
 
-    @Transient
+    @Transient // DB-д хадгалагдахгүй, зөвхөн R2DBC insert/update ялгахад ашиглагдана
     private boolean isNew;
 
+    /** Нууц үггүй хэрэглэгч үүсгэх (legacy). */
     public static User create(String firstName, String lastName, String email, SystemRole systemRole, String departmentId) {
         return create(firstName, lastName, email, systemRole, departmentId, null);
     }
 
+    /** Нууц үгтэй хэрэглэгч үүсгэх. UUID автоматаар үүснэ. */
     public static User create(String firstName, String lastName, String email, SystemRole systemRole, String departmentId, String passwordHash) {
         return new User(
                 UUID.randomUUID().toString(),

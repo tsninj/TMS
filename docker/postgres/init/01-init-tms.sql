@@ -1,3 +1,10 @@
+-- =============================================
+-- TMS өгөгдлийн сангийн анхны тохиргоо
+-- Docker Postgres анх асахад автоматаар ажиллана.
+-- Дахин ажиллуулахад: docker-compose down -v && docker-compose up -d
+-- =============================================
+
+-- Сервис тус бүрд тусдаа өгөгдлийн сан үүсгэх
 CREATE DATABASE user_service;
 CREATE DATABASE thesis_service;
 CREATE DATABASE workflow_service;
@@ -6,8 +13,12 @@ CREATE DATABASE grading_service;
 CREATE DATABASE notification_service;
 CREATE DATABASE report_service;
 
+-- =============================================
+-- USER SERVICE: Хэрэглэгчийн үйлчилгээний өгөгдлийн сан
+-- =============================================
 \connect user_service
 
+-- Хэрэглэгчийн үндсэн хүснэгт
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(255) PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -20,7 +31,8 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Seed ADMIN user  (password: Admin@TMS2026!)
+-- Анхны ADMIN хэрэглэгч үүсгэх (seed data)
+-- Нууц үг: Admin@TMS2026! (BCrypt hash)
 INSERT INTO users (id, first_name, last_name, email, password_hash, department_id, system_role, active, created_at)
 VALUES (
     'a0000000-0000-0000-0000-000000000001',
@@ -34,6 +46,7 @@ VALUES (
     CURRENT_TIMESTAMP
 ) ON CONFLICT (email) DO NOTHING;
 
+-- Оюутны нэмэлт мэдээллийн хүснэгт
 CREATE TABLE IF NOT EXISTS students (
     id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,
@@ -43,6 +56,7 @@ CREATE TABLE IF NOT EXISTS students (
 
 CREATE INDEX IF NOT EXISTS idx_students_user_id ON students(user_id);
 
+-- Багшийн нэмэлт мэдээллийн хүснэгт
 CREATE TABLE IF NOT EXISTS teachers (
     id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,
@@ -51,14 +65,19 @@ CREATE TABLE IF NOT EXISTS teachers (
 
 CREATE INDEX IF NOT EXISTS idx_teachers_user_id ON teachers(user_id);
 
+-- Тэнхимийн нэмэлт мэдээллийн хүснэгт
 CREATE TABLE IF NOT EXISTS departments (
     id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,
     department_name VARCHAR(255) NOT NULL
 );
 
+-- =============================================
+-- THESIS SERVICE: Дипломын ажлын өгөгдлийн сан
+-- =============================================
 \connect thesis_service
 
+-- Дипломын ажлын хүснэгт
 CREATE TABLE IF NOT EXISTS theses (
     id VARCHAR(255) PRIMARY KEY,
     student_id VARCHAR(255) NOT NULL,
@@ -74,8 +93,12 @@ CREATE TABLE IF NOT EXISTS theses (
 
 CREATE INDEX IF NOT EXISTS idx_theses_student_id ON theses(student_id);
 
+-- =============================================
+-- WORKFLOW SERVICE: Ажлын урсгалын өгөгдлийн сан
+-- =============================================
 \connect workflow_service
 
+-- Ажлын урсгалын хүснэгт
 CREATE TABLE IF NOT EXISTS workflows (
     id VARCHAR(255) PRIMARY KEY,
     department_id VARCHAR(255) NOT NULL UNIQUE,
@@ -83,6 +106,7 @@ CREATE TABLE IF NOT EXISTS workflows (
     status VARCHAR(50) NOT NULL
 );
 
+-- Ажлын урсгалын үе шатны хүснэгт
 CREATE TABLE IF NOT EXISTS workflow_stages (
     id VARCHAR(255) PRIMARY KEY,
     workflow_id VARCHAR(255) NOT NULL REFERENCES workflows(id) ON DELETE CASCADE,
@@ -96,8 +120,12 @@ CREATE TABLE IF NOT EXISTS workflow_stages (
 
 CREATE INDEX IF NOT EXISTS idx_workflow_stages_workflow_id ON workflow_stages(workflow_id);
 
+-- =============================================
+-- EVALUATION SERVICE: Үнэлгээний өгөгдлийн сан
+-- =============================================
 \connect evaluation_service
 
+-- Үнэлгээний хүснэгт
 CREATE TABLE IF NOT EXISTS evaluations (
     id VARCHAR(255) PRIMARY KEY,
     thesis_id VARCHAR(255) NOT NULL,
@@ -110,6 +138,7 @@ CREATE TABLE IF NOT EXISTS evaluations (
     status VARCHAR(50) NOT NULL
 );
 
+-- Шалгуур тус бүрийн үнэлгээний хүснэгт
 CREATE TABLE IF NOT EXISTS criterion_assessments (
     id VARCHAR(255) PRIMARY KEY,
     evaluation_id VARCHAR(255) NOT NULL REFERENCES evaluations(id) ON DELETE CASCADE,
@@ -123,8 +152,12 @@ CREATE TABLE IF NOT EXISTS criterion_assessments (
 CREATE INDEX IF NOT EXISTS idx_criterion_assessments_evaluation_id
     ON criterion_assessments(evaluation_id);
 
+-- =============================================
+-- GRADING SERVICE: Дүн, тогтоолын өгөгдлийн сан
+-- =============================================
 \connect grading_service
 
+-- Дүнгийн хүснэгт
 CREATE TABLE IF NOT EXISTS grades (
     id VARCHAR(255) PRIMARY KEY,
     thesis_id VARCHAR(255) NOT NULL,
@@ -140,6 +173,7 @@ CREATE INDEX IF NOT EXISTS idx_grades_thesis_id ON grades(thesis_id);
 CREATE INDEX IF NOT EXISTS idx_grades_workflow_id ON grades(workflow_id);
 CREATE INDEX IF NOT EXISTS idx_grades_resolution_id ON grades(resolution_id);
 
+-- Тогтоолын хүснэгт
 CREATE TABLE IF NOT EXISTS resolutions (
     id VARCHAR(255) PRIMARY KEY,
     workflow_id VARCHAR(255) NOT NULL,
@@ -152,8 +186,12 @@ CREATE TABLE IF NOT EXISTS resolutions (
 
 CREATE INDEX IF NOT EXISTS idx_resolutions_workflow_id ON resolutions(workflow_id);
 
+-- =============================================
+-- NOTIFICATION SERVICE: Мэдэгдлийн өгөгдлийн сан
+-- =============================================
 \connect notification_service
 
+-- Мэдэгдлийн хүснэгт
 CREATE TABLE IF NOT EXISTS notifications (
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL,
@@ -168,7 +206,10 @@ CREATE TABLE IF NOT EXISTS notifications (
 
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id);
 
+-- =============================================
+-- REPORT SERVICE: Тайлангийн өгөгдлийн сан
+-- =============================================
 \connect report_service
 
--- report_service currently has no persistence entity. The database is created
--- so the service can start with its existing R2DBC configuration.
+-- report_service одоогоор хүснэгтгүй. Өгөгдлийн санг зөвхөн R2DBC тохиргоонд
+-- хэрэгтэй учир үүсгэсэн.

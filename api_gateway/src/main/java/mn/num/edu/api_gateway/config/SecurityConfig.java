@@ -25,29 +25,38 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Gateway-н аюулгүй байдлын тохиргоо.
+ * JWT token шалгах, role-д суурилсан хандалтын хяналт хийнэ.
+ * user_service-ээс үүссэн HS256 JWT token-г decode хийж, role claim-аас эрхийг тодорхойлно.
+ */
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+    /**
+     * HTTP аюулгүй байдлын шүүлтүүрийн гинж (filter chain) тодорхойлно.
+     * Endpoint бүрт ямар role шаардагдахыг зааж өгнө.
+     */
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .csrf(ServerHttpSecurity.CsrfSpec::disable) // REST API учир CSRF хамгаалалт шаардлагагүй
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .pathMatchers("/actuator/health", "/actuator/info").permitAll()
-                        .pathMatchers("/api/auth/**").permitAll()
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() // CORS preflight хүсэлтийг нээлттэй
+                        .pathMatchers("/actuator/health", "/actuator/info").permitAll() // Health check нээлттэй
+                        .pathMatchers("/api/auth/**").permitAll() // Нэвтрэх endpoint нээлттэй
                         .pathMatchers(HttpMethod.POST,
                                 "/api/users/students",
                                 "/api/users/teachers",
                                 "/api/users/departments"
-                        ).hasRole("ADMIN")
-                        .pathMatchers(HttpMethod.GET, "/api/users/all").hasRole("DEPARTMENT")
-                        .pathMatchers("/api/workflows/**").hasRole("DEPARTMENT")
-                        .pathMatchers("/api/evaluations/**").hasAnyRole("TEACHER", "DEPARTMENT")
-                        .pathMatchers("/api/grades/**", "/api/grading/**", "/api/resolutions/**").hasRole("DEPARTMENT")
-                        .pathMatchers("/api/reports/**").hasAnyRole("TEACHER", "DEPARTMENT")
-                        .anyExchange().authenticated()
+                        ).hasRole("ADMIN") // Хэрэглэгч үүсгэх зөвхөн ADMIN
+                        .pathMatchers(HttpMethod.GET, "/api/users/all").hasRole("DEPARTMENT") // Бүх хэрэглэгч харах - DEPARTMENT
+                        .pathMatchers("/api/workflows/**").hasRole("DEPARTMENT") // Ажлын урсгал - DEPARTMENT
+                        .pathMatchers("/api/evaluations/**").hasAnyRole("TEACHER", "DEPARTMENT") // Үнэлгээ - TEACHER, DEPARTMENT
+                        .pathMatchers("/api/grades/**", "/api/grading/**", "/api/resolutions/**").hasRole("DEPARTMENT") // Дүн, тогтоол - DEPARTMENT
+                        .pathMatchers("/api/reports/**").hasAnyRole("TEACHER", "DEPARTMENT") // Тайлан - TEACHER, DEPARTMENT
+                        .anyExchange().authenticated() // Бусад бүх endpoint нэвтэрсэн байх шаардлагатай
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
@@ -55,6 +64,10 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * JWT token-г decode хийх bean.
+     * application.yml дахь нууц түлхүүрээр HS256 алгоритмаар баталгаажуулна.
+     */
     @Bean
     public ReactiveJwtDecoder jwtDecoder(@Value("${app.security.jwt.secret}") String secret) {
         SecretKey secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
@@ -63,12 +76,17 @@ public class SecurityConfig {
                 .build();
     }
 
+    /** JWT token-г Spring Security authentication объект руу хөрвүүлэгч. */
     private Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthenticationConverter() {
         ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(this::extractAuthorities);
         return converter::convert;
     }
 
+    /**
+     * JWT claim-с role-г уншиж, Spring Security-н GrantedAuthority руу хөрвүүлнэ.
+     * Жишээ: claim "role": "STUDENT" -> authority "ROLE_STUDENT"
+     */
     private Flux<GrantedAuthority> extractAuthorities(Jwt jwt) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         String role = jwt.getClaimAsString("role");

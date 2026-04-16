@@ -1,24 +1,26 @@
+# === Gateway серверийн тохиргоо ===
 server:
-  port: 8080
+  port: 8080 # Gateway-н сонсох порт (бүх client энд хандана)
 
 spring:
   application:
     name: api_gateway
   main:
-    web-application-type: reactive
+    web-application-type: reactive # WebFlux реактив горим
   cloud:
     gateway:
       httpclient:
-        connect-timeout: 5000
-        response-timeout: 30s
+        connect-timeout: 5000  # Downstream service-д холбогдох хугацааны хязгаар (мс)
+        response-timeout: 30s  # Хариу хүлээх дээд хугацаа
+      # === CORS тохиргоо (Frontend-с хандахыг зөвшөөрөх) ===
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
           '[/**]':
             allowed-origins:
-              - "http://localhost:3000"
-              - "http://localhost:5173"
-              - "http://localhost:8080"
+              - "http://localhost:3000"   # React default
+              - "http://localhost:5173"   # Vite default
+              - "http://localhost:8080"   # Gateway өөрөө
             allowed-methods:
               - GET
               - POST
@@ -29,58 +31,63 @@ spring:
             allowed-headers:
               - "*"
             allow-credentials: true
+      # === Route тохиргоо: ямар path ямар service рүү дамжих ===
       routes:
-        - id: user-service
+        - id: user-service # Хэрэглэгч болон нэвтрэлтийн service
           uri: http://localhost:8081
           predicates:
             - Path=/api/users/**,/api/auth/**
 
-        - id: thesis-service
+        - id: thesis-service # Дипломын ажлын service
           uri: http://localhost:8083
           predicates:
             - Path=/api/theses/**
 
-        - id: workflow-service
+        - id: workflow-service # Ажлын урсгал, үе шатны service
           uri: http://localhost:8084
           predicates:
             - Path=/api/workflows/**
 
-        - id: evaluation-service
+        - id: evaluation-service # Үнэлгээний service
           uri: http://localhost:8085
           predicates:
             - Path=/api/evaluations/**
 
-        - id: grading-service
+        - id: grading-service # Дүн, тогтоол гаргах service
           uri: http://localhost:8086
           predicates:
             - Path=/api/grades/**,/api/grading/**,/api/resolutions/**
 
-        - id: notification-service
+        - id: notification-service # Мэдэгдлийн service
           uri: http://localhost:8087
           predicates:
             - Path=/api/notifications/**
 
-        - id: report-service
+        - id: report-service # Тайлангийн service
           uri: http://localhost:8088
           predicates:
             - Path=/api/reports/**
 
+# === Actuator тохиргоо (серверийн төлөв шалгах) ===
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,gateway
+        include: health,info,gateway # Гаднаас харах боломжтой endpoint-ууд
   endpoint:
     health:
       probes:
         enabled: true
 
+# === JWT аюулгүй байдлын тохиргоо ===
 app:
   security:
     jwt:
+      # Нууц түлхүүр: user_service дэх JWT secret-тэй ижил байх ёстой
       secret: ${TMS_JWT_SECRET:tms-local-development-secret-key-please-change}
 
+# === Лог тохиргоо ===
 logging:
   level:
-    org.springframework.cloud.gateway: INFO
-    reactor.netty.http.client: INFO
+    org.springframework.cloud.gateway: INFO  # Gateway routing лог
+    reactor.netty.http.client: INFO          # HTTP client лог

@@ -10,6 +10,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+/**
+ * Нэвтрэлтийн бизнес логик.
+ * Email-аар хэрэглэгч хайж, нууц үг BCrypt-ээр шалгаж, зөв бол JWT token үүсгэнэ.
+ */
 @Service
 public class AuthenticateUserService implements AuthenticateUserUseCase {
 
@@ -27,6 +31,7 @@ public class AuthenticateUserService implements AuthenticateUserUseCase {
 
     @Override
     public Mono<LoginResponse> login(LoginCommand command) {
+        // 1. Email-аар хэрэглэгч хайх, олдохгүй бол 401 алдаа
         return userRepositoryPort.findByEmail(command.email().trim())
                 .switchIfEmpty(Mono.error(AuthenticationFailedException.invalidCredentials()))
                 .flatMap(user -> validatePassword(user, command.password())
@@ -45,6 +50,10 @@ public class AuthenticateUserService implements AuthenticateUserUseCase {
                         }));
     }
 
+    /**
+     * Нууц үг шалгах.
+     * Хэрэглэгч идэвхгүй эсэхүл нууц үг таарахгүй бол 401 буцаана.
+     */
     private Mono<User> validatePassword(User user, String rawPassword) {
         if (!user.isActive()) {
             return Mono.error(AuthenticationFailedException.invalidCredentials());

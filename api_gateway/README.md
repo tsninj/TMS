@@ -54,8 +54,29 @@ curl http://localhost:8080/api/theses \
   -H "Authorization: Bearer <accessToken>"
 ```
 
-Одоогоор `/api/auth/**` болон bootstrap user creation endpoint-ууд нээлттэй. `ADMIN` эсвэл seed user flow нэмэгдээгүй тул анхны хэрэглэгч үүсгэх боломжийг түр хадгалсан.
+## Хандалтын эрхийн дүрэм
 
-## Дараагийн security алхам
+| Endpoint | Эрх |
+|---|---|
+| `/api/auth/**` | Нээлттэй (token шаардахгүй) |
+| `POST /api/users/students,teachers,departments` | ADMIN |
+| `GET /api/users/all` | DEPARTMENT |
+| `/api/workflows/**` | DEPARTMENT |
+| `/api/evaluations/**` | TEACHER, DEPARTMENT |
+| `/api/grades/**`, `/api/resolutions/**` | DEPARTMENT |
+| `/api/reports/**` | TEACHER, DEPARTMENT |
+| Бусад бүх endpoint | Нэвтэрсэн (authenticated) |
 
-Service бүр дээр JWT resource server validation, ownership check, мөн admin/seed user flow нэмнэ.
+## ADMIN seed хэрэглэгч
+
+Docker анх асахад `01-init-tms.sql` дотор ADMIN хэрэглэгч автоматаар үүснэ:
+
+- **Email:** `admin@tms.num.edu.mn`
+- **Нууц үг:** `Admin@TMS2026!`
+
+ADMIN нэвтэрч JWT token авсны дараа бусад хэрэглэгч (student, teacher, department) үүсгэх боломжтой.
+
+## Дараагийн алхам
+
+- Service бүр дээр JWT resource server validation, ownership check нэмэх
+- Frontend login/token интеграци

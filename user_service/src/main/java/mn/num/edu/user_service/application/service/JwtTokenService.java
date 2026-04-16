@@ -17,12 +17,17 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
+/**
+ * JWT token үүсгэх service.
+ * HS256 алгоритмаар гарын тоогоор нууц түлхүүрээр token үүсгэнэ.
+ * Token дотор userId (subject), email, role, departmentId claim агуулна.
+ */
 @Service
 public class JwtTokenService {
 
-    private final JwtEncoder jwtEncoder;
-    private final String issuer;
-    private final long expirationMinutes;
+    private final JwtEncoder jwtEncoder;    // JWT encode хийгч
+    private final String issuer;              // Token үүсгэгчийн нэр (iss claim)
+    private final long expirationMinutes;     // Token хүчинтэй хугацаа (минут)
 
     public JwtTokenService(
             @Value("${app.security.jwt.secret}") String secret,
@@ -35,6 +40,7 @@ public class JwtTokenService {
         this.expirationMinutes = expirationMinutes;
     }
 
+    /** Хэрэглэгчийн мэдээллээр JWT token үүсгэх. */
     public GeneratedToken generate(User user) {
         Instant now = Instant.now();
         Instant expiresAt = now.plusSeconds(expirationMinutes * 60);
@@ -54,6 +60,7 @@ public class JwtTokenService {
         return new GeneratedToken(token, expiresAt, expirationMinutes * 60);
     }
 
+    /** Үүсгэгдсэн token-ий мэдээллийг агуулах record. */
     public record GeneratedToken(String value, Instant expiresAt, long expiresInSeconds) {
     }
 }
