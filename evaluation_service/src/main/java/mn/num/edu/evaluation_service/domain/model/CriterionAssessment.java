@@ -1,18 +1,20 @@
 package mn.num.edu.evaluation_service.domain.model;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.UUID;
 
+@Getter
 public class CriterionAssessment {
-    private UUID criterionId;
+    private String criterionId;
     private String criterionName;
     private BigDecimal maxPoint;
     private Integer achievedPercent; // 0..100
     private BigDecimal weightedScore;
 
     public CriterionAssessment(
-            UUID criterionId,
+            String criterionId,
             String criterionName,
             BigDecimal maxPoint,
             Integer achievedPercent
@@ -43,23 +45,4 @@ public class CriterionAssessment {
         this.weightedScore = calculateWeightedScore(this.maxPoint, newPercent);
     }
 
-    public UUID getCriterionId() {
-        return criterionId;
-    }
-
-    public String getCriterionName() {
-        return criterionName;
-    }
-
-    public BigDecimal getMaxPoint() {
-        return maxPoint;
-    }
-
-    public Integer getAchievedPercent() {
-        return achievedPercent;
-    }
-
-    public BigDecimal getWeightedScore() {
-        return weightedScore;
-    }
 }

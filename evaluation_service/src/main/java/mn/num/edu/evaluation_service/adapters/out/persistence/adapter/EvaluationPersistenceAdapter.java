@@ -46,7 +46,7 @@ public class EvaluationPersistenceAdapter implements EvaluationRepositoryPort {
                         criterionRepository.deleteByEvaluationId(saved.getId())
                                 .thenMany(reactor.core.publisher.Flux.fromIterable(evaluation.getCriteria()))
                                 .flatMap(c -> criterionRepository.save(new CriterionAssessmentEntity(
-                                        UUID.randomUUID(),
+                                        UUID.randomUUID().toString(),
                                         saved.getId(),
                                         c.getCriterionId(),
                                         c.getCriterionName(),
@@ -59,7 +59,7 @@ public class EvaluationPersistenceAdapter implements EvaluationRepositoryPort {
     }
 
     @Override
-    public Mono<Evaluation> findById(UUID evaluationId) {
+    public Mono<Evaluation> findById(String evaluationId) {
         return evaluationRepository.findById(evaluationId)
                 .flatMap(entity ->
                         criterionRepository.findByEvaluationId(entity.getId())

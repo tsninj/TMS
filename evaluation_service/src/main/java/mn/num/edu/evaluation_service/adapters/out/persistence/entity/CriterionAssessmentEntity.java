@@ -1,18 +1,19 @@
 package mn.num.edu.evaluation_service.adapters.out.persistence.entity;
 
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
+@Getter
 @Table("criterion_assessments")
 public class CriterionAssessmentEntity {
 
     @Id
-    private UUID id;
-    private UUID evaluationId;
-    private UUID criterionId;
+    private String id;
+    private String evaluationId;
+    private String criterionId;
     private String criterionName;
     private BigDecimal maxPoint;
     private Integer achievedPercent;
@@ -21,9 +22,9 @@ public class CriterionAssessmentEntity {
     public CriterionAssessmentEntity() {}
 
     public CriterionAssessmentEntity(
-            UUID id,
-            UUID evaluationId,
-            UUID criterionId,
+            String id,
+            String evaluationId,
+            String criterionId,
             String criterionName,
             BigDecimal maxPoint,
             Integer achievedPercent,
@@ -38,11 +39,4 @@ public class CriterionAssessmentEntity {
         this.weightedScore = weightedScore;
     }
 
-    public UUID getId() { return id; }
-    public UUID getEvaluationId() { return evaluationId; }
-    public UUID getCriterionId() { return criterionId; }
-    public String getCriterionName() { return criterionName; }
-    public BigDecimal getMaxPoint() { return maxPoint; }
-    public Integer getAchievedPercent() { return achievedPercent; }
-    public BigDecimal getWeightedScore() { return weightedScore; }
 }

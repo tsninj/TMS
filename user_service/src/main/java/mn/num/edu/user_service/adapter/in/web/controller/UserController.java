@@ -1,5 +1,7 @@
 package mn.num.edu.user_service.adapter.in.web.controller;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import mn.num.edu.user_service.adapter.in.web.request.CreateDepartmentRequest;
 import mn.num.edu.user_service.adapter.in.web.request.CreateStudentRequest;
@@ -25,8 +27,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-@RestController
-@RequestMapping("/api/users")
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "User API", description = "User management endpoints")
+@RestController@RequestMapping("/api/users")
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -46,8 +51,12 @@ public class UserController {
         this.createDepartmentUseCase = createDepartmentUseCase;
         this.findUserUseCase = findUserUseCase;
     }
-
-    @PostMapping("/students")
+    @Operation(summary = "Create student user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Student created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })    @PostMapping("/students")
     public Mono<ResponseEntity<User>> createStudent(
             @Valid @RequestBody CreateStudentRequest request
     ) {
@@ -69,7 +78,11 @@ public class UserController {
                     return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
                 });
     }
-
+    @Operation(summary = "Create teacher user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
     @PostMapping("/teachers")
     public Mono<ResponseEntity<User>> createTeacher(
             @Valid @RequestBody CreateTeacherRequest request
@@ -91,7 +104,11 @@ public class UserController {
                     return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
                 });
     }
-
+    @Operation(summary = "Create department user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
     @PostMapping("/departments")
     public Mono<ResponseEntity<User>> createDepartment(
             @Valid @RequestBody CreateDepartmentRequest request
@@ -112,8 +129,11 @@ public class UserController {
                     return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
                 });
     }
-
-    @GetMapping("/{id}")
+    @Operation(summary = "Find user by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User found"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })    @GetMapping("/{id}")
     public Mono<ResponseEntity<User>> findUserById(@PathVariable String id) {
         log.info("Received find user request. userId={}", id);
 
@@ -124,7 +144,10 @@ public class UserController {
                 })
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
-    @GetMapping("/all")
+    @Operation(summary = "Get all users")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Users retrieved successfully")
+    })    @GetMapping("/all")
     public Flux<User> findAll() {
         log.info("Received find user request. All user");
 

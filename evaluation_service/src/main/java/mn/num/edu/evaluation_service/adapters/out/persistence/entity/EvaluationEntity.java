@@ -1,36 +1,37 @@
 package mn.num.edu.evaluation_service.adapters.out.persistence.entity;
 
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
+@Getter
 @Table("evaluations")
 public class EvaluationEntity {
 
     @Id
-    private UUID id;
-    private UUID thesisId;
-    private UUID workflowId;
-    private UUID stageId;
+    private String id;
+    private String thesisId;
+    private String workflowId;
+    private String stageId;
     private String stageName;
     private BigDecimal stageMaxPoint;
-    private UUID committeeId;
-    private UUID evaluatorId;
+    private String committeeId;
+    private String evaluatorId;
     private String status;
 
     public EvaluationEntity() {}
 
     public EvaluationEntity(
-            UUID id,
-            UUID thesisId,
-            UUID workflowId,
-            UUID stageId,
+            String id,
+            String thesisId,
+            String workflowId,
+            String stageId,
             String stageName,
             BigDecimal stageMaxPoint,
-            UUID committeeId,
-            UUID evaluatorId,
+            String committeeId,
+            String evaluatorId,
             String status
     ) {
         this.id = id;
@@ -44,13 +45,4 @@ public class EvaluationEntity {
         this.status = status;
     }
 
-    public UUID getId() { return id; }
-    public UUID getThesisId() { return thesisId; }
-    public UUID getWorkflowId() { return workflowId; }
-    public UUID getStageId() { return stageId; }
-    public String getStageName() { return stageName; }
-    public BigDecimal getStageMaxPoint() { return stageMaxPoint; }
-    public UUID getCommitteeId() { return committeeId; }
-    public UUID getEvaluatorId() { return evaluatorId; }
-    public String getStatus() { return status; }
 }

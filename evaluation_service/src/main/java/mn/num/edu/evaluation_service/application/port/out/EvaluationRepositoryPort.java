@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface EvaluationRepositoryPort {
     Mono<Evaluation> save(Evaluation evaluation);
-    Mono<Evaluation> findById(UUID evaluationId);
+    Mono<Evaluation> findById(String evaluationId);
 }

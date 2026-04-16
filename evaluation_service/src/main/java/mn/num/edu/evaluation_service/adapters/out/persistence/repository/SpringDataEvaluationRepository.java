@@ -5,5 +5,5 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import java.util.UUID;
 
-public interface SpringDataEvaluationRepository extends ReactiveCrudRepository<EvaluationEntity, UUID> {
+public interface SpringDataEvaluationRepository extends ReactiveCrudRepository<EvaluationEntity, String> {
 }

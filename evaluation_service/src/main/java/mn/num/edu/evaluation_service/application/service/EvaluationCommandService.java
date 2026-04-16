@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @Service
 public class EvaluationCommandService implements SubmitEvaluationUseCase, UpdateEvaluationUseCase {
@@ -88,7 +88,7 @@ public class EvaluationCommandService implements SubmitEvaluationUseCase, Update
         return Mono.just(evaluation);
     }
 
-    private void updateCriterion(Evaluation evaluation, UUID criterionId, Integer percent) {
+    private void updateCriterion(Evaluation evaluation, String criterionId, Integer percent) {
         CriterionAssessment target = evaluation.getCriteria().stream()
                 .filter(c -> c.getCriterionId().equals(criterionId))
                 .findFirst()

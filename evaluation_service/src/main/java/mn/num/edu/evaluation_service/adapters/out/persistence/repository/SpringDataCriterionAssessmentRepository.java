@@ -6,7 +6,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.UUID;
 
-public interface SpringDataCriterionAssessmentRepository extends ReactiveCrudRepository<CriterionAssessmentEntity, UUID> {
-    Flux<CriterionAssessmentEntity> findByEvaluationId(UUID evaluationId);
-    reactor.core.publisher.Mono<Void> deleteByEvaluationId(UUID evaluationId);
+public interface SpringDataCriterionAssessmentRepository extends ReactiveCrudRepository<CriterionAssessmentEntity, String> {
+    Flux<CriterionAssessmentEntity> findByEvaluationId(String evaluationId);
+    reactor.core.publisher.Mono<Void> deleteByEvaluationId(String evaluationId);
 }

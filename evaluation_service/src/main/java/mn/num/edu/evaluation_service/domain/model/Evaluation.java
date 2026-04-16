@@ -1,31 +1,33 @@
 package mn.num.edu.evaluation_service.domain.model;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+@Getter
 public class Evaluation {
-    private UUID id;
-    private UUID thesisId;
-    private UUID workflowId;
-    private UUID stageId;
+    private String id;
+    private String thesisId;
+    private String workflowId;
+    private String stageId;
     private String stageName;
     private BigDecimal stageMaxPoint;
-    private UUID committeeId;
-    private UUID evaluatorId;
+    private String committeeId;
+    private String evaluatorId;
     private EvaluationStatus status;
     private final List<CriterionAssessment> criteria = new ArrayList<>();
 
     public Evaluation(
-            UUID id,
-            UUID thesisId,
-            UUID workflowId,
-            UUID stageId,
+            String id,
+            String thesisId,
+            String workflowId,
+            String stageId,
             String stageName,
             BigDecimal stageMaxPoint,
-            UUID committeeId,
-            UUID evaluatorId,
+            String committeeId,
+            String evaluatorId,
             EvaluationStatus status
     ) {
         this.id = id;
@@ -60,43 +62,4 @@ public class Evaluation {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public UUID getThesisId() {
-        return thesisId;
-    }
-
-    public UUID getWorkflowId() {
-        return workflowId;
-    }
-
-    public UUID getStageId() {
-        return stageId;
-    }
-
-    public String getStageName() {
-        return stageName;
-    }
-
-    public BigDecimal getStageMaxPoint() {
-        return stageMaxPoint;
-    }
-
-    public UUID getCommitteeId() {
-        return committeeId;
-    }
-
-    public UUID getEvaluatorId() {
-        return evaluatorId;
-    }
-
-    public EvaluationStatus getStatus() {
-        return status;
-    }
-
-    public List<CriterionAssessment> getCriteria() {
-        return criteria;
-    }
 }

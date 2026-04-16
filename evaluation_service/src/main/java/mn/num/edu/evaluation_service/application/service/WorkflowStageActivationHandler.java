@@ -21,7 +21,7 @@ public class WorkflowStageActivationHandler {
 
     public Mono<Void> handle(WorkflowStageActivatedEvent event) {
         Evaluation evaluation = new Evaluation(
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 event.thesisId(),
                 event.workflowId(),
                 event.stageId(),
